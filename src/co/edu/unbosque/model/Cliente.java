@@ -1,6 +1,7 @@
 package co.edu.unbosque.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Cliente implements Serializable {
 
@@ -20,7 +21,17 @@ public class Cliente implements Serializable {
 
     private long saldo;
 
-    public Cliente(String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo) {
+    private ArrayList<Pareja> parejas;
+
+    private int binTarjeta;
+
+    private int mesCaducidadTarjeta;
+
+    private int anioCaducidadTarjeta;
+
+    private int codigoTarjeta;
+
+    public Cliente(String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas) {
         this.usuario = usuario;
         this.clave = clave;
         this.nombres = nombres;
@@ -29,6 +40,7 @@ public class Cliente implements Serializable {
         this.genero = genero;
         this.fechaNacimiento = fechaNacimiento;
         this.saldo = saldo;
+        this.parejas = parejas;
     }
 
     public String getUsuario() {
@@ -93,5 +105,13 @@ public class Cliente implements Serializable {
 
     public void setSaldo(long saldo) {
         this.saldo = saldo;
+    }
+
+    public ArrayList<Pareja> getParejas() {
+        return parejas;
+    }
+
+    public void setParejas(ArrayList<Pareja> parejas) {
+        this.parejas = parejas;
     }
 }

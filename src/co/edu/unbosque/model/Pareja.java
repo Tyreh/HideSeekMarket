@@ -1,8 +1,6 @@
 package co.edu.unbosque.model;
 
-import java.io.Serializable;
-
-public class Pareja implements Serializable {
+public class Pareja {
 
     private String nombres;
 
