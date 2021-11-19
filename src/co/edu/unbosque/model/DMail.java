@@ -11,7 +11,7 @@ public class DMail {
 
     public DMail() {
         remitente = "sg.epkjtk93x29jpt@gmail.com";
-          // jose manco
+
     }
 
     public void sendEmail(String asuntoCorreo, String mensajeCorreo) {
