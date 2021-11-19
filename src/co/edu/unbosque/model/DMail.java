@@ -10,7 +10,6 @@ public class DMail {
     private String remitente;
 
     public DMail() {
-        remitente = "sg.epkjtk93x29jpt@gmail.com";
 
     }
 
@@ -49,12 +48,12 @@ public class DMail {
         }
     }
 
-    public void checkMail() {
+/*    public void checkMail() {
         try {
             Properties properties = new Properties();
 
         } catch () {
 
         }
-    }
+    }*/
 }
