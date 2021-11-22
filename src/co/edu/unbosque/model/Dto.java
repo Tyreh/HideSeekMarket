@@ -6,7 +6,8 @@ import co.edu.unbosque.model.persistence.Dao;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Dto {
+public class
+Dto {
 
     private ArrayList<Cliente> arrayClientes;
 

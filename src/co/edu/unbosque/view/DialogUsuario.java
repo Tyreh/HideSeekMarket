@@ -2,9 +2,9 @@ package co.edu.unbosque.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
-public class PanelUsuario extends JPanel {
-
+public class DialogUsuario extends JDialog {
     private JLabel disenioTarjeta;
 
     private JLabel binTarjeta;
@@ -21,10 +21,14 @@ public class PanelUsuario extends JPanel {
 
     private PanelBotonesUsuario panelBotonesUsuario;
 
-    public PanelUsuario() {
+    private ImageIcon fondo;
+
+    private JLabel fondoLabel;
+
+    public DialogUsuario() {
         setLayout(null);
         init();
-        setVisible(true);
+        setVisible(false);
     }
 
     public void init() {
@@ -33,17 +37,21 @@ public class PanelUsuario extends JPanel {
         binTarjeta = new JLabel("XXXX XXXX XXXX XXXX");
         binTarjeta.setFont(font);
         binTarjeta.setForeground(Color.WHITE);
-        binTarjeta.setBounds(320,200, 200,20);
+        binTarjeta.setBounds(320, 200, 200, 20);
         add(binTarjeta);
 
         tarjetaCreditoPanel = new TarjetaCreditoPanel();
-        tarjetaCreditoPanel.setBounds(155, 35, 440, 230);
+        tarjetaCreditoPanel.setBounds(170, 35, 440, 230);
         add(tarjetaCreditoPanel);
 
         panelBotonesUsuario = new PanelBotonesUsuario();
-        panelBotonesUsuario.setBounds(10,300,730,40);
+        panelBotonesUsuario.setBounds(10, 300, 760, 40);
         add(panelBotonesUsuario);
 
-
+        fondo = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fondo.png/"))).getImage().getScaledInstance(800,390, Image.SCALE_SMOOTH));
+        fondoLabel = new JLabel();
+        fondoLabel.setIcon(fondo);
+        fondoLabel.setBounds(0,0, 800,390);
+        add(fondoLabel);
     }
 }

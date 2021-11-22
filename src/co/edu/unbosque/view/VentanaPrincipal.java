@@ -5,14 +5,19 @@ import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
 
-    private PanelUsuario panelUsuario;
+//    private PanelUsuario panelUsuario;
+
+    private DialogUsuario dialogUsuario;
+
+    private PanelPrincipal panelPrincipal;
+
+    private Mensajes mensajes;
 
     public VentanaPrincipal() {
         setTitle("Proyecto");
-        setSize(1000, 1000);
+        setSize(1000, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
-        getContentPane().setBackground(Color.black);
         init();
         setLocationRelativeTo(null);
         setResizable(false);
@@ -20,16 +25,37 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void init() {
-        panelUsuario = new PanelUsuario();
-        panelUsuario.setBounds(0,0,750,350);
-        getContentPane().add(panelUsuario);
+        dialogUsuario = new DialogUsuario();
+        dialogUsuario.setBounds(0,0,800,390);
+
+        panelPrincipal = new PanelPrincipal();
+        panelPrincipal.setBounds(0,0,1000,700);
+        getContentPane().add(panelPrincipal);
+
+        mensajes = new Mensajes();
     }
 
-    public PanelUsuario getPanelUsuario() {
-        return panelUsuario;
+    public DialogUsuario getDialogUsuario() {
+        return dialogUsuario;
     }
 
-    public void setPanelUsuario(PanelUsuario panelUsuario) {
-        this.panelUsuario = panelUsuario;
+    public void setDialogUsuario(DialogUsuario dialogUsuario) {
+        this.dialogUsuario = dialogUsuario;
+    }
+
+    public PanelPrincipal getPanelPrincipal() {
+        return panelPrincipal;
+    }
+
+    public void setPanelPrincipal(PanelPrincipal panelPrincipal) {
+        this.panelPrincipal = panelPrincipal;
+    }
+
+    public Mensajes getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(Mensajes mensajes) {
+        this.mensajes = mensajes;
     }
 }

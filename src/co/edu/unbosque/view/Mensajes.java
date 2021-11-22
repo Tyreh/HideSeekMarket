@@ -15,4 +15,8 @@ public class Mensajes {
     public int pedirDatoInteger(String mensaje) {
         return Integer.parseInt(JOptionPane.showInputDialog(null, mensaje, "Proyecto", JOptionPane.INFORMATION_MESSAGE));
     }
+
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(null, mensaje, "Proyecto", JOptionPane.ERROR_MESSAGE);
+    }
 }
