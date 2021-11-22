@@ -21,6 +21,7 @@ public class Controller implements ActionListener {
 
     public void listeners() {
         ventanaPrincipal.getPanelPrincipal().getIniciarSesionButton().addActionListener(this);
+        ventanaPrincipal.getPanelPrincipal().getRegistrarseButton().addActionListener(this);
 
     }
 
@@ -29,23 +30,9 @@ public class Controller implements ActionListener {
         String comando = e.getActionCommand();
 
         if (comando.equals("INICIAR_SESION")) {
-            String usuario = ventanaPrincipal.getPanelPrincipal().getUsuarioField().getText();
-            String clave = ventanaPrincipal.getPanelPrincipal().getClaveField().getText();
-
-            if (usuario.equals("") || clave.equals("")) {
-                ventanaPrincipal.getMensajes().mostrarError("Estimado Cliente:\nDebe ingresar su usuario y contraseña para poder iniciar sesión.");
-            } else {
-                if (dto.getDao().buscarCliente(dto.getArrayClientes(), usuario) != null) {
-                    if (dto.getDao().buscarCliente(dto.getArrayClientes(), usuario).getClave().equals(clave)) {
-
-                    } else {
-                        ventanaPrincipal.getMensajes().mostrarError("Estimado Cliente:\nLa contraseña ingresada es incorrecta, inténtelo de nuevo.");
-                    }
-                } else {
-                    ventanaPrincipal.getMensajes().mostrarError("Estimado Cliente:\nEl usuario ingresado no está registrado.");
-                }
-            }
+            iniciarSesion();
         } else if (comando.equals("REGISTRARSE")) {
+            registro();
         }
     }
 
@@ -58,7 +45,7 @@ public class Controller implements ActionListener {
         } else {
             if (dto.getDao().buscarCliente(dto.getArrayClientes(), usuario) != null) {
                 if (dto.getDao().buscarCliente(dto.getArrayClientes(), usuario).getClave().equals(clave)) {
-
+                    ventanaPrincipal.getDialogUsuario().setVisible(true);
                 } else {
                     ventanaPrincipal.getMensajes().mostrarError("Estimado Cliente:\nLa contraseña ingresada es incorrecta, inténtelo de nuevo.");
                 }
@@ -66,5 +53,9 @@ public class Controller implements ActionListener {
                 ventanaPrincipal.getMensajes().mostrarError("Estimado Cliente:\nEl usuario ingresado no está registrado.");
             }
         }
+    }
+
+    public void registro() {
+        ventanaPrincipal.getDialogRegistro().setVisible(true);
     }
 }

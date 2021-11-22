@@ -1,13 +1,12 @@
 package co.edu.unbosque.view;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
 
-//    private PanelUsuario panelUsuario;
-
     private DialogUsuario dialogUsuario;
+
+    private DialogRegistro dialogRegistro;
 
     private PanelPrincipal panelPrincipal;
 
@@ -27,6 +26,9 @@ public class VentanaPrincipal extends JFrame {
     public void init() {
         dialogUsuario = new DialogUsuario();
         dialogUsuario.setBounds(0,0,800,390);
+
+        dialogRegistro = new DialogRegistro();
+        dialogRegistro.setBounds(140, 10, 560, 450);
 
         panelPrincipal = new PanelPrincipal();
         panelPrincipal.setBounds(0,0,1000,700);
@@ -57,5 +59,13 @@ public class VentanaPrincipal extends JFrame {
 
     public void setMensajes(Mensajes mensajes) {
         this.mensajes = mensajes;
+    }
+
+    public DialogRegistro getDialogRegistro() {
+        return dialogRegistro;
+    }
+
+    public void setDialogRegistro(DialogRegistro dialogRegistro) {
+        this.dialogRegistro = dialogRegistro;
     }
 }
