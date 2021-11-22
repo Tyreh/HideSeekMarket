@@ -10,7 +10,6 @@ public class Controller implements ActionListener {
 
     public Controller() {
         ventanaPrincipal = new VentanaPrincipal();
-
     }
 
     public void listeners() {
