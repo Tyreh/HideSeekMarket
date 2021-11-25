@@ -15,7 +15,7 @@ public class Dao {
         this.archivo = archivo;
     }
 
-    public boolean agregarCliente(ArrayList<Cliente> arrayClientes, File file, String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, int binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
+    public boolean agregarCliente(ArrayList<Cliente> arrayClientes, File file, String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, String binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
         Cliente nuevoCliente = new Cliente(usuario, clave, nombres, apellidos, correo, genero, fechaNacimiento, saldo, parejas, binTarjeta, mesCaducidadTarjeta, anioCaducidadTarjeta, codigoTarjeta);
 
         if (buscarCliente(arrayClientes, usuario) == null) {
@@ -58,7 +58,7 @@ public class Dao {
         }
     }
 
-    public boolean modificarCliente(ArrayList<Cliente> arrayClientes, File file, String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, int binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
+    public boolean modificarCliente(ArrayList<Cliente> arrayClientes, File file, String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, String binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
         try {
             Cliente existente = buscarCliente(arrayClientes, usuario);
             if (existente != null) {

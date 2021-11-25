@@ -1,6 +1,8 @@
 package co.edu.unbosque.view;
 
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
@@ -87,15 +89,18 @@ public class DialogRegistro extends JDialog {
         add(enumLabel);
 
         diaNacimientoComboBox = new JComboBox<>();
+        AutoCompleteDecorator.decorate(diaNacimientoComboBox);
         diaNacimientoComboBox.setBounds(420, 150, 50, 20);
         add(diaNacimientoComboBox);
 
         mesNacimientoComboBox = new JComboBox<>();
+        AutoCompleteDecorator.decorate(mesNacimientoComboBox);
         mesNacimientoComboBox.setBounds(290, 150, 120, 20);
         mesNacimientoComboBox.setActionCommand("FECHA_NACIMIENTO");
         add(mesNacimientoComboBox);
 
         anioNacimientoComboBox = new JComboBox<>();
+        AutoCompleteDecorator.decorate(anioNacimientoComboBox);
         anioNacimientoComboBox.setBounds(220, 150, 60, 20);
         anioNacimientoComboBox.setActionCommand("FECHA_NACIMIENTO");
         add(anioNacimientoComboBox);
@@ -140,7 +145,7 @@ public class DialogRegistro extends JDialog {
         aceptarButton.setBounds(220, 350, 250, 30);
         aceptarButton.setForeground(Color.BLACK);
         aceptarButton.setBackground(new Color(86, 196, 0));
-        aceptarButton.setActionCommand("INGRESAR_NUEVO_CIUDADANO");
+        aceptarButton.setActionCommand("INGRESAR_REGISTRO");
         add(aceptarButton);
 
         fondo = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/fondo.png/"))).getImage().getScaledInstance(800,450, Image.SCALE_SMOOTH));

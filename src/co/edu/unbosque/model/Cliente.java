@@ -23,7 +23,7 @@ public class Cliente implements Serializable {
 
     private ArrayList<Pareja> parejas;
 
-    private int binTarjeta;
+    private String binTarjeta;
 
     private int mesCaducidadTarjeta;
 
@@ -31,7 +31,7 @@ public class Cliente implements Serializable {
 
     private int codigoTarjeta;
 
-    public Cliente(String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, int binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
+    public Cliente(String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, String binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
         this.usuario = usuario;
         this.clave = clave;
         this.nombres = nombres;
@@ -119,11 +119,11 @@ public class Cliente implements Serializable {
         this.parejas = parejas;
     }
 
-    public int getBinTarjeta() {
+    public String getBinTarjeta() {
         return binTarjeta;
     }
 
-    public void setBinTarjeta(int binTarjeta) {
+    public void setBinTarjeta(String binTarjeta) {
         this.binTarjeta = binTarjeta;
     }
 
