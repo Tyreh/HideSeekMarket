@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Cliente implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String usuario;
 
     private String clave;
@@ -149,5 +151,22 @@ public class Cliente implements Serializable {
 
     public void setCodigoTarjeta(int codigoTarjeta) {
         this.codigoTarjeta = codigoTarjeta;
+    }
+
+    @Override
+    public String toString() {
+        return "Datos personales:" +
+                "\n\nUsuario: " + usuario +
+                "\nNombres: " + nombres +
+                "\nApellidos: " + apellidos +
+                "\nCorreo: " + correo +
+                "\nGenero: " + genero +
+                "\nFecha de nacimiento: " + fechaNacimiento +
+                "\nParejas: " + parejas +
+                "\n\nDatos de tarjeta:" +
+                "\n\nSaldo: " + saldo +
+                "\nBin: " + binTarjeta +
+                "\nHasta: " + mesCaducidadTarjeta + "/" + anioCaducidadTarjeta +
+                "\nCVV: " + codigoTarjeta;
     }
 }

@@ -7,11 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Dao {
+public class DaoCliente {
 
     private final Archivo archivo;
 
-    public Dao(Archivo archivo) {
+    public DaoCliente(Archivo archivo) {
         this.archivo = archivo;
     }
 
@@ -20,7 +20,7 @@ public class Dao {
 
         if (buscarCliente(arrayClientes, usuario) == null) {
             arrayClientes.add(nuevoCliente);
-            archivo.escribirArchivo(arrayClientes, file);
+            archivo.escribirArchivoCliente(arrayClientes, file);
             return true;
         } else {
             return false;
@@ -49,7 +49,7 @@ public class Dao {
                 arrayClientes.remove(cliente);
                 file.delete();
                 file.createNewFile();
-                archivo.escribirArchivo(arrayClientes, file);
+                archivo.escribirArchivoCliente(arrayClientes, file);
                 return true;
             }
         } catch (IOException e) {
@@ -78,7 +78,7 @@ public class Dao {
                 arrayClientes.add(existente);
                 file.delete();
                 file.createNewFile();
-                archivo.escribirArchivo(arrayClientes, file);
+                archivo.escribirArchivoCliente(arrayClientes, file);
                 return true;
             } else {
                 return false;

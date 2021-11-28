@@ -8,6 +8,8 @@ public class VentanaPrincipal extends JFrame {
 
     private DialogRegistro dialogRegistro;
 
+    private PanelAdmin panelAdmin;
+
     private PanelPrincipal panelPrincipal;
 
     private Mensajes mensajes;
@@ -29,6 +31,10 @@ public class VentanaPrincipal extends JFrame {
 
         dialogRegistro = new DialogRegistro();
         dialogRegistro.setBounds(140, 10, 560, 450);
+
+        panelAdmin = new PanelAdmin();
+        panelAdmin.setBounds(0,0,600,500);
+        getContentPane().add(panelAdmin);
 
         panelPrincipal = new PanelPrincipal();
         panelPrincipal.setBounds(0,0,1000,700);
@@ -67,5 +73,13 @@ public class VentanaPrincipal extends JFrame {
 
     public void setDialogRegistro(DialogRegistro dialogRegistro) {
         this.dialogRegistro = dialogRegistro;
+    }
+
+    public PanelAdmin getPanelAdmin() {
+        return panelAdmin;
+    }
+
+    public void setPanelAdmin(PanelAdmin panelAdmin) {
+        this.panelAdmin = panelAdmin;
     }
 }

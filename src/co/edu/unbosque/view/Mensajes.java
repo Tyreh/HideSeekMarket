@@ -8,6 +8,10 @@ public class Mensajes {
         JOptionPane.showMessageDialog(null, mensaje, "Proyecto", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public void mostrarInfoImagen(String mensaje, ImageIcon imagen) {
+        JOptionPane.showMessageDialog(null, mensaje, "Proyecto", JOptionPane.INFORMATION_MESSAGE, imagen);
+    }
+
     public String pedirDatoString(String mensaje) {
         return JOptionPane.showInputDialog(null, mensaje, "Proyecto", JOptionPane.INFORMATION_MESSAGE);
     }
