@@ -1,8 +1,6 @@
 package co.edu.unbosque.controller;
 
-import co.edu.unbosque.model.Dto;
-import co.edu.unbosque.model.GeneradorTarjetas;
-import co.edu.unbosque.model.Producto;
+import co.edu.unbosque.model.*;
 import co.edu.unbosque.view.VentanaPrincipal;
 
 import javax.swing.*;
@@ -72,6 +70,7 @@ public class Controller implements ActionListener {
 
         ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getAgregarProductoButton().addActionListener(this);
         ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getImagenButton().addActionListener(this);
+        ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().addActionListener(this);
 
         ventanaPrincipal.getPanelAdmin().getAgregarClientePanel().getAgregarClienteButton().addActionListener(this);
         ventanaPrincipal.getPanelAdmin().getAgregarClientePanel().getAnioNacimientoComboBox().addActionListener(this);
@@ -80,6 +79,7 @@ public class Controller implements ActionListener {
         ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getAgregarClienteButton().addActionListener(this);
         ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getAnioNacimientoComboBox().addActionListener(this);
         ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getMesNacimientoComboBox().addActionListener(this);
+
     }
 
     @Override
@@ -238,22 +238,6 @@ public class Controller implements ActionListener {
                     ventanaPrincipal.getMensajes().mostrarError("Recuerde que la ID solo debe contener números.");
                 }
                 break;
-            case "AGREGAR_PRODUCTO":
-                ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel().setVisible(true);
-                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().setVisible(false);
-                break;
-            case "AGREGAR_CLIENTE":
-                ventanaPrincipal.getPanelAdmin().getAgregarClientePanel().setVisible(true);
-                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().setVisible(false);
-                break;
-            case "MODIFICAR_PRODUCTO":
-                ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel().setVisible(false);
-                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().setVisible(true);
-                break;
-            case "MODIFICAR_CLIENTE":
-                ventanaPrincipal.getPanelAdmin().getAgregarClientePanel().setVisible(false);
-                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().setVisible(true);
-                break;
             case "INGRESAR_PRODUCTO":
                 try {
                     int idProducto = Integer.parseInt(ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel().getIdField().getText());
@@ -270,9 +254,163 @@ public class Controller implements ActionListener {
                     ventanaPrincipal.getMensajes().mostrarError("Recuerde que los campos de ID y precio deben contener únicamente valores numéricos.");
                 }
                 break;
-            case "IMAGEN_PRODUCTO":
-                ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel().getImagenButton().setIcon(cargarImagen());
-                break;
+        }
+
+        if (comando.contains("CLIENTE")) {
+            String usuario;
+            String clave;
+            String nombres;
+            String apellidos;
+            String correo;
+            String genero;
+            String fechaNacimiento;
+            Cliente cliente;
+
+            switch (comando) {
+                case "LISTADO_CLIENTE":
+                    visibilidadPanelesProducto(ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel(), ventanaPrincipal.getPanelAdmin().getModificarProductoPanel(), ventanaPrincipal.getPanelAdmin().getListadoProductoPanel(), ventanaPrincipal.getPanelAdmin().getListadoProductoPanel());
+
+                    ventanaPrincipal.getPanelAdmin().getListadoProductoPanel().getDefaultTableModel().setRowCount(0);
+                    for (Cliente clientes : dto.getArrayClientes()) {
+                        usuario = clientes.getUsuario();
+                        nombres = clientes.getNombres();
+                        apellidos = clientes.getApellidos();
+                        correo = clientes.getCorreo();
+                        genero = clientes.getGenero();
+                        fechaNacimiento = clientes.getFechaNacimiento();
+                        ventanaPrincipal.getPanelAdmin().getListadoClientePanel().getDefaultTableModel().addRow(new String[]{usuario, nombres, apellidos, correo, genero, fechaNacimiento});
+                    }
+                    break;
+                case "MODIFICAR_CLIENTE":
+                    ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getUsuarioComboBox().removeAllItems();
+                    for (Cliente clientes : dto.getArrayClientes()) {
+                        usuario = clientes.getUsuario();
+                        ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getUsuarioComboBox().addItem(usuario);
+                    }
+                case "CLIENTE_MODIFICAR_COMBOBOX":
+                    usuario = (String) ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getUsuarioComboBox().getSelectedItem();
+
+                    if (usuario != null) {
+                        if (!usuario.equals("")) {
+                            try {
+                                cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getNombresField().setText(cliente.getNombres());
+                            } catch (NullPointerException ex) {
+                                ventanaPrincipal.getMensajes().mostrarError("Este producto ya no existe.");
+                                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getUsuarioComboBox().removeItem(usuario);
+                                usuario = (String) ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getUsuarioComboBox().getSelectedItem();
+                            } finally {
+                                cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getClaveField().setText(cliente.getClave());
+                                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getNombresField().setText(cliente.getNombres());
+                                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getApellidosField().setText(cliente.getApellidos());
+                                ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getCorreoField().setText(cliente.getCorreo());
+                            }
+                        }
+                    }
+                    break;
+                case "INGRESAR_MODIFICACION_CLIENTE":
+                    usuario = (String) ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getUsuarioComboBox().getSelectedItem();
+                    clave = ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getClaveField().getText();
+                    nombres = ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getNombresField().getText();
+                    apellidos = ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getApellidosField().getText();
+                    correo = ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getCorreoField().getText();
+                    genero = ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getCorreoField().getText();
+                    fechaNacimiento = ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getDiaNacimientoComboBox().getSelectedItem() + "/" + ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getMesNacimientoComboBox().getSelectedItem() + "/" + ventanaPrincipal.getPanelAdmin().getModificarClientePanel().getAnioNacimientoComboBox().getSelectedItem();
+
+                    assert usuario != null;
+                    if (dto.getDaoCliente().modificarCliente(dto.getArrayClientes(), dto.getFileClientes(), usuario, clave, nombres, apellidos, correo, genero, fechaNacimiento)) {
+                        ventanaPrincipal.getMensajes().mostrarInfo("El cliente ha sido modificado correctamente.");
+                    } else {
+                        ventanaPrincipal.getMensajes().mostrarInfo("El cliente especificado no existe.");
+                    }
+                    break;
+            }
+        } else if (comando.contains("PRODUCTO")) {
+            String idProducto;
+            String nombreProducto;
+            String descripcionProducto;
+            String precioProducto;
+            ImageIcon imagenProducto;
+            Producto producto;
+
+            switch (comando) {
+                case "IMAGEN_PRODUCTO_AGREGAR":
+                    ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel().getImagenButton().setIcon(cargarImagen());
+                    break;
+                case "IMAGEN_PRODUCTO_MODIFICAR":
+                    ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getImagenButton().setIcon(cargarImagen());
+                    break;
+                case "LISTADO_PRODUCTO":
+                    visibilidadPanelesProducto(ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel(), ventanaPrincipal.getPanelAdmin().getModificarProductoPanel(), ventanaPrincipal.getPanelAdmin().getListadoProductoPanel(), ventanaPrincipal.getPanelAdmin().getListadoProductoPanel());
+
+                    ventanaPrincipal.getPanelAdmin().getListadoProductoPanel().getDefaultTableModel().setRowCount(0);
+                    for (Producto productos : dto.getArrayProductos()) {
+                        idProducto = String.valueOf(productos.getIdProducto());
+                        nombreProducto = productos.getNombreProducto();
+                        descripcionProducto = productos.getLoreProducto();
+                        precioProducto = "$" + productos.getPrecioProducto();
+                        ventanaPrincipal.getPanelAdmin().getListadoProductoPanel().getDefaultTableModel().addRow(new String[]{idProducto, nombreProducto, descripcionProducto, precioProducto});
+                    }
+                    break;
+                case "MODIFICAR_PRODUCTO":
+                    ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().removeAllItems();
+                    for (Producto productos : dto.getArrayProductos()) {
+                        idProducto = String.valueOf(productos.getIdProducto());
+                        ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().addItem(idProducto);
+                    }
+                case "PRODUCTO_MODIFICAR_COMBOBOX":
+                    idProducto = (String) ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().getSelectedItem();
+
+                    if (idProducto != null) {
+                        if (!idProducto.equals("")) {
+                            try {
+                                producto = dto.getDaoProducto().buscarProducto(dto.getArrayProductos(), Integer.parseInt(idProducto));
+                                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getNombreField().setText(producto.getNombreProducto());
+                            } catch (NullPointerException ex) {
+                                ventanaPrincipal.getMensajes().mostrarError("Este producto ya no existe.");
+                                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().removeItem(idProducto);
+                                idProducto = (String) ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().getSelectedItem();
+                            } finally {
+                                producto = dto.getDaoProducto().buscarProducto(dto.getArrayProductos(), Integer.parseInt(idProducto));
+                                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getNombreField().setText(producto.getNombreProducto());
+                                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getDescripcionField().setText(producto.getLoreProducto());
+                                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getPrecioField().setText(String.valueOf(producto.getPrecioProducto()));
+                                ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getImagenButton().setIcon(producto.getImagenProducto());
+                            }
+                        }
+                    }
+                    break;
+                case "INGRESAR_MODIFICACION_PRODUCTO":
+                    idProducto = (String) ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getIdComboBox().getSelectedItem();
+                    nombreProducto = ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getNombreField().getText();
+                    descripcionProducto = ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getDescripcionField().getText();
+                    precioProducto = ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getPrecioField().getText();
+                    imagenProducto = (ImageIcon) ventanaPrincipal.getPanelAdmin().getModificarProductoPanel().getImagenButton().getIcon();
+
+                    assert idProducto != null;
+                    if (dto.getDaoProducto().modificarProducto(dto.getArrayProductos(), dto.getFileProductos(), Integer.parseInt(idProducto), nombreProducto, descripcionProducto, Long.parseLong(precioProducto), imagenProducto)) {
+                        ventanaPrincipal.getMensajes().mostrarInfo("El producto ha sido modificado correctamente.");
+                    } else {
+                        ventanaPrincipal.getMensajes().mostrarInfo("El producto especificado no existe.");
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void visibilidadPanelesProducto(JPanel agregarPanel, JPanel modificarPanel, JPanel listadoPanel, JPanel panelVisible) {
+        agregarPanel.setVisible(false);
+        modificarPanel.setVisible(false);
+        listadoPanel.setVisible(false);
+
+        ventanaPrincipal.getPanelAdmin().remove(agregarPanel);
+        ventanaPrincipal.getPanelAdmin().remove(modificarPanel);
+        ventanaPrincipal.getPanelAdmin().remove(listadoPanel);
+
+        if (panelVisible != null) {
+            ventanaPrincipal.getPanelAdmin().add(panelVisible, BorderLayout.CENTER);
+            panelVisible.setVisible(true);
         }
     }
 
@@ -301,12 +439,31 @@ public class Controller implements ActionListener {
         panelHashMap.put("REGRESAR_PANEL_TIENDA", ventanaPrincipal.getPanelAdmin().getOpcionesTiendas());
         panelHashMap.put("REGRESAR_PANEL_CLIENTE", ventanaPrincipal.getPanelAdmin().getOpcionesClientes());
         panelHashMap.put("REGRESAR_PANEL_PRODUCTO", ventanaPrincipal.getPanelAdmin().getOpcionesProductos());
+        panelHashMap.put("AGREGAR_PRODUCTO", ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel());
+        panelHashMap.put("MODIFICAR_PRODUCTO", ventanaPrincipal.getPanelAdmin().getModificarProductoPanel());
+        panelHashMap.put("AGREGAR_CLIENTE", ventanaPrincipal.getPanelAdmin().getAgregarClientePanel());
+        panelHashMap.put("MODIFICAR_CLIENTE", ventanaPrincipal.getPanelAdmin().getModificarClientePanel());
 
         boolean visibilidadPanelPrincipal = ventanaPrincipal.getPanelAdmin().getPanelAdminOpciones().isVisible();
+        JPanel aux = null;
 
         if (panelHashMap.containsKey(comando)) {
-            panelHashMap.get(comando).setVisible(!panelHashMap.get(comando).isVisible());
-            ventanaPrincipal.getPanelAdmin().getPanelAdminOpciones().setVisible(!visibilidadPanelPrincipal);
+            if (comando.contains("ADMINISTRAR") || comando.contains("REGRESAR")) {
+                if (panelHashMap.get(comando).isVisible()) {
+                    ventanaPrincipal.getPanelAdmin().remove(panelHashMap.get(comando));
+                    panelHashMap.get(comando).setVisible(!panelHashMap.get(comando).isVisible());
+                    ventanaPrincipal.getPanelAdmin().add(ventanaPrincipal.getPanelAdmin().getPanelAdminOpciones(), BorderLayout.NORTH);
+                } else {
+                    ventanaPrincipal.getPanelAdmin().add(panelHashMap.get(comando), BorderLayout.NORTH);
+                    panelHashMap.get(comando).setVisible(!panelHashMap.get(comando).isVisible());
+                    ventanaPrincipal.getPanelAdmin().remove(ventanaPrincipal.getPanelAdmin().getPanelAdminOpciones());
+                }
+                ventanaPrincipal.getPanelAdmin().getPanelAdminOpciones().setVisible(!visibilidadPanelPrincipal);
+            } else {
+                aux = panelHashMap.get(comando);
+            }
+            visibilidadPanelesProducto(ventanaPrincipal.getPanelAdmin().getAgregarProductoPanel(), ventanaPrincipal.getPanelAdmin().getModificarProductoPanel(), ventanaPrincipal.getPanelAdmin().getListadoProductoPanel(), aux);
+            visibilidadPanelesProducto(ventanaPrincipal.getPanelAdmin().getAgregarClientePanel(), ventanaPrincipal.getPanelAdmin().getModificarClientePanel(), ventanaPrincipal.getPanelAdmin().getListadoClientePanel(), aux);
         }
     }
 
@@ -318,6 +475,7 @@ public class Controller implements ActionListener {
             ventanaPrincipal.getMensajes().mostrarError("Estimado Cliente:\nDebe ingresar su usuario y contraseña para poder iniciar sesión.");
         } else if (usuario.equals("A") && clave.equals("A")) {
             ventanaPrincipal.getPanelAdmin().setVisible(true);
+            ventanaPrincipal.getPanelPrincipal().setVisible(false);
         } else {
             if (dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario) != null) {
                 if (dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario).getClave().equals(clave)) {

@@ -1,6 +1,7 @@
 package co.edu.unbosque.view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class PanelCliente extends JPanel {
@@ -33,103 +34,125 @@ public class PanelCliente extends JPanel {
 
     private JButton agregarClienteButton;
 
-    private final boolean edicionClientes;
+    private DefaultTableModel defaultTableModel;
 
-    private final String textoBotonAceptar;
+    private JTable table;
 
-    private final String comando;
+    private JScrollPane scrollPane;
 
-    public PanelCliente(boolean edicionClientes, String textoBotonAceptar, String comando) {
+    private final String tipoPanel;
+
+    private String textoBotonAceptar;
+
+    private String comando;
+
+    public PanelCliente(String tipoPanel, String textoBotonAceptar, String comando) {
         this.textoBotonAceptar = textoBotonAceptar;
-        this.edicionClientes = edicionClientes;
+        this.tipoPanel = tipoPanel;
         this.comando = comando;
+        setLayout(new FlowLayout());
+        init();
+        setVisible(false);
+    }
+
+    public PanelCliente(String tipoPanel) {
+        this.tipoPanel = tipoPanel;
         setLayout(new GridLayout());
         init();
         setVisible(false);
     }
 
     public void init() {
-        panelFecha = new JPanel(new GridLayout(1, 3,3, 0));
+        if (tipoPanel.equals("AGREGAR") || tipoPanel.equals("MODIFICAR")) {
+            panelFecha = new JPanel(new GridLayout(1, 3, 3, 0));
 
-        anioNacimientoComboBox = new JComboBox<>();
-        anioNacimientoComboBox.setActionCommand("FECHA_NACIMIENTO");
-        panelFecha.add(anioNacimientoComboBox);
+            anioNacimientoComboBox = new JComboBox<>();
+            anioNacimientoComboBox.setActionCommand("FECHA_NACIMIENTO");
+            panelFecha.add(anioNacimientoComboBox);
 
-        mesNacimientoComboBox = new JComboBox<>();
-        mesNacimientoComboBox.setActionCommand("FECHA_NACIMIENTO");
-        panelFecha.add(mesNacimientoComboBox);
+            mesNacimientoComboBox = new JComboBox<>();
+            mesNacimientoComboBox.setActionCommand("FECHA_NACIMIENTO");
+            panelFecha.add(mesNacimientoComboBox);
 
-        diaNacimientoComboBox = new JComboBox<>();
-        panelFecha.add(diaNacimientoComboBox);
+            diaNacimientoComboBox = new JComboBox<>();
+            panelFecha.add(diaNacimientoComboBox);
 
-        panelFields = new JPanel(new SpringLayout());
+            panelFields = new JPanel(new SpringLayout());
 
-        label = new JLabel("Usuario: ", JLabel.TRAILING);
-        panelFields.add(label);
+            label = new JLabel("Usuario: ", JLabel.TRAILING);
+            panelFields.add(label);
 
-        if (edicionClientes) {
-            usuarioComboBox = new JComboBox<>();
-            label.setLabelFor(usuarioComboBox);
-            panelFields.add(usuarioComboBox);
-        } else {
-            usuarioField = new JTextField(10);
-            label.setLabelFor(usuarioField);
-            panelFields.add(usuarioField);
+            if (tipoPanel.equals("MODIFICAR")) {
+                usuarioComboBox = new JComboBox<>();
+                usuarioComboBox.setActionCommand("CLIENTE_MODIFICAR_COMBOBOX");
+                label.setLabelFor(usuarioComboBox);
+                panelFields.add(usuarioComboBox);
+            } else {
+                usuarioField = new JTextField(10);
+                label.setLabelFor(usuarioField);
+                panelFields.add(usuarioField);
+            }
+
+            label = new JLabel("Clave: ", JLabel.TRAILING);
+            panelFields.add(label);
+
+            claveField = new JTextField(10);
+            label.setLabelFor(claveField);
+            panelFields.add(claveField);
+
+            label = new JLabel("Nombres: ", JLabel.TRAILING);
+            panelFields.add(label);
+
+            nombresField = new JTextField(10);
+            label.setLabelFor(nombresField);
+            panelFields.add(nombresField);
+
+            label = new JLabel("Apellidos: ", JLabel.TRAILING);
+            panelFields.add(label);
+
+            apellidosField = new JTextField(10);
+            label.setLabelFor(apellidosField);
+            panelFields.add(apellidosField);
+
+            label = new JLabel("Correo: ", JLabel.TRAILING);
+            panelFields.add(label);
+
+            correoField = new JTextField(10);
+            label.setLabelFor(correoField);
+            panelFields.add(correoField);
+
+            label = new JLabel("Genero: ", JLabel.TRAILING);
+            panelFields.add(label);
+
+            generoComboBox = new JComboBox<>(new String[]{"Masculino", "Femenino"});
+            label.setLabelFor(generoComboBox);
+            panelFields.add(generoComboBox);
+
+            label = new JLabel("Fecha de nacimiento: ", JLabel.TRAILING);
+            panelFields.add(label);
+
+            label.setLabelFor(panelFecha);
+            panelFields.add(panelFecha);
+
+            label = new JLabel("", JLabel.TRAILING);
+            panelFields.add(label);
+
+            agregarClienteButton = new JButton(textoBotonAceptar);
+            agregarClienteButton.setActionCommand(comando);
+            label.setLabelFor(agregarClienteButton);
+            panelFields.add(agregarClienteButton);
+
+            SpringUtilities.makeCompactGrid(panelFields, 8, 2, 0, 0, 5, 5);
+
+            add(panelFields);
+        } else if (tipoPanel.equals("LISTADO")) {
+            defaultTableModel = new DefaultTableModel(new String[]{"USUARIO", "NOMBRES", "APELLIDOS", "CORREO", "GENERO", "FECHA DE NACIMIENTO"}, 0);
+            table = new JTable(defaultTableModel);
+            table.getTableHeader().setReorderingAllowed(false);
+            table.setEnabled(false);
+            scrollPane = new JScrollPane(table);
+            add(scrollPane);
         }
-
-        label = new JLabel("Clave: ", JLabel.TRAILING);
-        panelFields.add(label);
-
-        claveField = new JTextField(10);
-        label.setLabelFor(claveField);
-        panelFields.add(claveField);
-
-        label = new JLabel("Nombres: ", JLabel.TRAILING);
-        panelFields.add(label);
-
-        nombresField = new JTextField(10);
-        label.setLabelFor(nombresField);
-        panelFields.add(nombresField);
-
-        label = new JLabel("Apellidos: ", JLabel.TRAILING);
-        panelFields.add(label);
-
-        apellidosField = new JTextField(10);
-        label.setLabelFor(apellidosField);
-        panelFields.add(apellidosField);
-
-        label = new JLabel("Correo: ", JLabel.TRAILING);
-        panelFields.add(label);
-
-        correoField = new JTextField(10);
-        label.setLabelFor(correoField);
-        panelFields.add(correoField);
-
-        label = new JLabel("Genero: ", JLabel.TRAILING);
-        panelFields.add(label);
-
-        generoComboBox = new JComboBox<>(new String[]{"Masculino", "Femenino"});
-        label.setLabelFor(generoComboBox);
-        panelFields.add(generoComboBox);
-
-        label = new JLabel("Fecha de nacimiento: ", JLabel.TRAILING);
-        panelFields.add(label);
-
-        label.setLabelFor(panelFecha);
-        panelFields.add(panelFecha);
-
-        label = new JLabel("", JLabel.TRAILING);
-        panelFields.add(label);
-
-        agregarClienteButton = new JButton(textoBotonAceptar);
-        agregarClienteButton.setActionCommand(comando);
-        label.setLabelFor(agregarClienteButton);
-        panelFields.add(agregarClienteButton);
-
-        SpringUtilities.makeCompactGrid(panelFields, 8, 2, 0, 0, 5, 5);
-
-        //panelFields.setBounds(0, 20, 250, 230);
-        add(panelFields);
     }
 
     public JPanel getPanelFields() {
@@ -234,5 +257,29 @@ public class PanelCliente extends JPanel {
 
     public void setAgregarClienteButton(JButton agregarClienteButton) {
         this.agregarClienteButton = agregarClienteButton;
+    }
+
+    public DefaultTableModel getDefaultTableModel() {
+        return defaultTableModel;
+    }
+
+    public void setDefaultTableModel(DefaultTableModel defaultTableModel) {
+        this.defaultTableModel = defaultTableModel;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public void setTable(JTable table) {
+        this.table = table;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    public void setScrollPane(JScrollPane scrollPane) {
+        this.scrollPane = scrollPane;
     }
 }

@@ -19,12 +19,20 @@ public class PanelAdmin extends JPanel {
 
     private PanelProducto modificarProductoPanel;
 
+    private PanelProducto listadoProductoPanel;
+
     private PanelCliente agregarClientePanel;
 
     private PanelCliente modificarClientePanel;
 
+    private PanelCliente listadoClientePanel;
+
+    private PanelTienda agregarTiendaPanel;
+
+    private PanelTienda modificarTiendaPanel;
+
     public PanelAdmin() {
-        setLayout(null);
+        setLayout(new BorderLayout());
         setBackground(Color.RED);
         init();
         setVisible(false);
@@ -34,36 +42,46 @@ public class PanelAdmin extends JPanel {
         font = new Font("Century Gothic", Font.BOLD, 13);
 
         panelAdminOpciones = new PanelAdminOpciones();
-        panelAdminOpciones.setBounds(0, 0, 600, 50);
-        add(panelAdminOpciones);
+        //panelAdminOpciones.setBounds(0, 0, 600, 50);
+        add(panelAdminOpciones, BorderLayout.NORTH);
 
         opcionesClientes = new PanelAdminOpcionesAvanzadas("Cliente");
-        opcionesClientes.setBounds(0, 0, 600, 50);
-        add(opcionesClientes);
+       // opcionesClientes.setBounds(0, 0, 600, 50);
+        //add(opcionesClientes);
 
         opcionesProductos = new PanelAdminOpcionesAvanzadas("Producto");
-        opcionesProductos.setBounds(0, 0, 600, 50);
-        add(opcionesProductos);
+        //opcionesProductos.setBounds(0, 0, 600, 50);
+        //add(opcionesProductos);
 
         opcionesTiendas = new PanelAdminOpcionesAvanzadas("Tienda");
         opcionesTiendas.setBounds(0, 0, 600, 50);
-        add(opcionesTiendas);
+        //add(opcionesTiendas);
 
-        agregarProductoPanel = new PanelProducto(false, "Agregar producto", "INGRESAR_PRODUCTO");
-        agregarProductoPanel.setBounds(0,60,250,250);
-        add(agregarProductoPanel);
+        agregarProductoPanel = new PanelProducto("AGREGAR", "Agregar producto", "INGRESAR_PRODUCTO");
+        //agregarProductoPanel.setBounds(0,60,250,250);
+//        add(agregarProductoPanel);
 
-        modificarProductoPanel = new PanelProducto(true, "Modificar producto", "INGRESAR_MODIFICACION_PRODUCTO");
-        modificarProductoPanel.setBounds(0,60,250,250);
-        add(modificarProductoPanel);
+        modificarProductoPanel = new PanelProducto("MODIFICAR", "Modificar producto", "INGRESAR_MODIFICACION_PRODUCTO");
+        listadoProductoPanel = new PanelProducto("LISTADO");
+        //modificarProductoPanel.setBounds(0,60,250,250);
+//        add(modificarProductoPanel);
 
-        agregarClientePanel = new PanelCliente(false, "Agregar cliente", "INGRESAR_REGISTRO");
-        agregarClientePanel.setBounds(0,60,500,240);
-        add(agregarClientePanel);
+        agregarClientePanel = new PanelCliente("AGREGAR", "Agregar cliente", "INGRESAR_REGISTRO");
+        //agregarClientePanel.setBounds(0,60,500,240);
+//        add(agregarClientePanel);
 
-        modificarClientePanel = new PanelCliente(true, "Modificar cliente", "INGRESAR_MODIFICACION_CLIENTE");
-        modificarClientePanel.setBounds(0,60,240,250);
-        add(modificarClientePanel);
+        modificarClientePanel = new PanelCliente("MODIFICAR", "Modificar cliente", "INGRESAR_MODIFICACION_CLIENTE");
+        listadoClientePanel = new PanelCliente("LISTADO");
+        //modificarClientePanel.setBounds(0,60,240,250);
+//        add(modificarClientePanel);
+
+        agregarTiendaPanel = new PanelTienda(false, "Agregar tienda", "INGRESAR_TIENDA");
+       // agregarTiendaPanel.setBounds(0,60,240,250);
+//        add(agregarTiendaPanel);
+
+        modificarTiendaPanel = new PanelTienda(true, "Modificar tienda", "INGRESAR_MODIFICACION_PRODUCTO");
+       // modificarTiendaPanel.setBounds(0,60,240,250);
+//        add(modificarTiendaPanel);
     }
 
     public PanelAdminOpciones getPanelAdminOpciones() {
@@ -128,5 +146,37 @@ public class PanelAdmin extends JPanel {
 
     public void setModificarClientePanel(PanelCliente modificarClientePanel) {
         this.modificarClientePanel = modificarClientePanel;
+    }
+
+    public PanelTienda getAgregarTiendaPanel() {
+        return agregarTiendaPanel;
+    }
+
+    public void setAgregarTiendaPanel(PanelTienda agregarTiendaPanel) {
+        this.agregarTiendaPanel = agregarTiendaPanel;
+    }
+
+    public PanelTienda getModificarTiendaPanel() {
+        return modificarTiendaPanel;
+    }
+
+    public void setModificarTiendaPanel(PanelTienda modificarTiendaPanel) {
+        this.modificarTiendaPanel = modificarTiendaPanel;
+    }
+
+    public PanelProducto getListadoProductoPanel() {
+        return listadoProductoPanel;
+    }
+
+    public void setListadoProductoPanel(PanelProducto listadoProductoPanel) {
+        this.listadoProductoPanel = listadoProductoPanel;
+    }
+
+    public PanelCliente getListadoClientePanel() {
+        return listadoClientePanel;
+    }
+
+    public void setListadoClientePanel(PanelCliente listadoClientePanel) {
+        this.listadoClientePanel = listadoClientePanel;
     }
 }

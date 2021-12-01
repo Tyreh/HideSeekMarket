@@ -58,7 +58,7 @@ public class DaoCliente {
         }
     }
 
-    public boolean modificarCliente(ArrayList<Cliente> arrayClientes, File file, String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, String binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
+    public boolean modificarCliente(ArrayList<Cliente> arrayClientes, File file, String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento) {
         try {
             Cliente existente = buscarCliente(arrayClientes, usuario);
             if (existente != null) {
@@ -69,12 +69,12 @@ public class DaoCliente {
                 existente.setCorreo(correo);
                 existente.setGenero(genero);
                 existente.setFechaNacimiento(fechaNacimiento);
-                existente.setSaldo(saldo);
+/*                existente.setSaldo(saldo);
                 existente.setParejas(parejas);
                 existente.setBinTarjeta(binTarjeta);
                 existente.setMesCaducidadTarjeta(mesCaducidadTarjeta);
                 existente.setAnioCaducidadTarjeta(anioCaducidadTarjeta);
-                existente.setCodigoTarjeta(codigoTarjeta);
+                existente.setCodigoTarjeta(codigoTarjeta);*/
                 arrayClientes.add(existente);
                 file.delete();
                 file.createNewFile();
