@@ -1,10 +1,16 @@
 package co.edu.unbosque.view;
 
+import co.edu.unbosque.model.Producto;
+import com.sun.jdi.PrimitiveValue;
+
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.util.ArrayList;
 
 public class VentanaPrincipal extends JFrame {
 
-    private DialogUsuario dialogUsuario;
+    private PanelUsuario panelUsuario;
 
     private DialogRegistro dialogRegistro;
 
@@ -12,13 +18,25 @@ public class VentanaPrincipal extends JFrame {
 
     private PanelPrincipal panelPrincipal;
 
+    private ListaProductos listaProductos;
+
+    private JScrollPane scrollProductos;
+
+    private PanelAdminGestion panelAdminGestion;
+
     private Mensajes mensajes;
 
-    public VentanaPrincipal() {
+    private final ArrayList<Producto> productoArrayList;
+
+    private PagarCarrito pagarCarrito;
+
+
+    public VentanaPrincipal(ArrayList<Producto> productoArrayList) {
+        this.productoArrayList = productoArrayList;
         setTitle("Proyecto");
-        setSize(1000, 700);
+        setSize(1200, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
+        setLayout(new BorderLayout());
         init();
         setLocationRelativeTo(null);
         setResizable(false);
@@ -26,29 +44,30 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void init() {
-        dialogUsuario = new DialogUsuario();
-        dialogUsuario.setBounds(0,0,800,390);
+        panelPrincipal = new PanelPrincipal();
+        add(panelPrincipal, BorderLayout.NORTH);
 
-        dialogRegistro = new DialogRegistro();
-        dialogRegistro.setBounds(140, 10, 560, 450);
+        listaProductos = new ListaProductos(productoArrayList);
+        scrollProductos = new JScrollPane(listaProductos);
+        add(scrollProductos, BorderLayout.CENTER);
+
+        pagarCarrito = new PagarCarrito(productoArrayList);
+        pagarCarrito.setBounds(0, 0, 560, 450);
+        //add(pagarCarrito, BorderLayout.LINE_START);
+
+        panelAdminGestion = new PanelAdminGestion();
 
         panelAdmin = new PanelAdmin();
-        panelAdmin.setBounds(0,0,600,500);
-        getContentPane().add(panelAdmin);
-
-        panelPrincipal = new PanelPrincipal();
-        panelPrincipal.setBounds(0,0,1000,700);
-        getContentPane().add(panelPrincipal);
 
         mensajes = new Mensajes();
     }
 
-    public DialogUsuario getDialogUsuario() {
-        return dialogUsuario;
+    public PanelAdmin getPanelAdmin() {
+        return panelAdmin;
     }
 
-    public void setDialogUsuario(DialogUsuario dialogUsuario) {
-        this.dialogUsuario = dialogUsuario;
+    public void setPanelAdmin(PanelAdmin panelAdmin) {
+        this.panelAdmin = panelAdmin;
     }
 
     public PanelPrincipal getPanelPrincipal() {
@@ -67,19 +86,26 @@ public class VentanaPrincipal extends JFrame {
         this.mensajes = mensajes;
     }
 
-    public DialogRegistro getDialogRegistro() {
-        return dialogRegistro;
+    public JScrollPane getScrollProductos() {
+        return scrollProductos;
     }
 
-    public void setDialogRegistro(DialogRegistro dialogRegistro) {
-        this.dialogRegistro = dialogRegistro;
+    public PanelUsuario getPanelUsuario() {
+        return panelUsuario;
     }
 
-    public PanelAdmin getPanelAdmin() {
-        return panelAdmin;
+    public PanelAdminGestion getPanelAdminGestion() {
+        return panelAdminGestion;
     }
 
-    public void setPanelAdmin(PanelAdmin panelAdmin) {
-        this.panelAdmin = panelAdmin;
+    public ListaProductos getListaProductos() {
+        return listaProductos;
     }
+
+    public PagarCarrito getPagarCarrito() {
+        return pagarCarrito;
+    }
+
+
 }
+

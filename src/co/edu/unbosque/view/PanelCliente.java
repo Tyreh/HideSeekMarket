@@ -12,19 +12,19 @@ public class PanelCliente extends JPanel {
 
     private JLabel label;
 
-    private JTextField usuarioField;
+    private JTextField usuario;
 
-    private JComboBox<String> usuarioComboBox;
+    private JComboBox<String> usuarioCombo;
 
-    private JTextField claveField;
+    private JPasswordField clave;
 
-    private JTextField nombresField;
+    private JTextField nombres;
 
-    private JTextField apellidosField;
+    private JTextField apellidos;
 
-    private JTextField correoField;
+    private JTextField correo;
 
-    private JComboBox<String> generoComboBox;
+    private JComboBox<String> genero;
 
     private JComboBox<Integer> diaNacimientoComboBox;
 
@@ -32,7 +32,7 @@ public class PanelCliente extends JPanel {
 
     private JComboBox<Integer> anioNacimientoComboBox;
 
-    private JButton agregarClienteButton;
+    private JButton aceptar;
 
     private DefaultTableModel defaultTableModel;
 
@@ -44,12 +44,9 @@ public class PanelCliente extends JPanel {
 
     private String textoBotonAceptar;
 
-    private String comando;
-
-    public PanelCliente(String tipoPanel, String textoBotonAceptar, String comando) {
+    public PanelCliente(String tipoPanel, String textoBotonAceptar) {
         this.textoBotonAceptar = textoBotonAceptar;
         this.tipoPanel = tipoPanel;
-        this.comando = comando;
         setLayout(new FlowLayout());
         init();
         setVisible(false);
@@ -63,7 +60,7 @@ public class PanelCliente extends JPanel {
     }
 
     public void init() {
-        if (tipoPanel.equals("AGREGAR") || tipoPanel.equals("MODIFICAR")) {
+        if (tipoPanel.equals("AGREGAR") || tipoPanel.equals("MODIFICAR") || tipoPanel.equals("ELIMINAR") || tipoPanel.equals("BUSCAR")) {
             panelFecha = new JPanel(new GridLayout(1, 3, 3, 0));
 
             anioNacimientoComboBox = new JComboBox<>();
@@ -82,51 +79,51 @@ public class PanelCliente extends JPanel {
             label = new JLabel("Usuario: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            if (tipoPanel.equals("MODIFICAR")) {
-                usuarioComboBox = new JComboBox<>();
-                usuarioComboBox.setActionCommand("CLIENTE_MODIFICAR_COMBOBOX");
-                label.setLabelFor(usuarioComboBox);
-                panelFields.add(usuarioComboBox);
+            if (!tipoPanel.equals("AGREGAR")) {
+                usuarioCombo = new JComboBox<>();
+                usuarioCombo.setActionCommand("CLIENTE_" + tipoPanel.toUpperCase() + "_COMBOBOX");
+                label.setLabelFor(usuarioCombo);
+                panelFields.add(usuarioCombo);
             } else {
-                usuarioField = new JTextField(10);
-                label.setLabelFor(usuarioField);
-                panelFields.add(usuarioField);
+                usuario = new JTextField(20);
+                label.setLabelFor(usuario);
+                panelFields.add(usuario);
             }
 
             label = new JLabel("Clave: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            claveField = new JTextField(10);
-            label.setLabelFor(claveField);
-            panelFields.add(claveField);
+            clave = new JPasswordField(20);
+            label.setLabelFor(clave);
+            panelFields.add(clave);
 
             label = new JLabel("Nombres: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            nombresField = new JTextField(10);
-            label.setLabelFor(nombresField);
-            panelFields.add(nombresField);
+            nombres = new JTextField(20);
+            label.setLabelFor(nombres);
+            panelFields.add(nombres);
 
             label = new JLabel("Apellidos: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            apellidosField = new JTextField(10);
-            label.setLabelFor(apellidosField);
-            panelFields.add(apellidosField);
+            apellidos = new JTextField(20);
+            label.setLabelFor(apellidos);
+            panelFields.add(apellidos);
 
             label = new JLabel("Correo: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            correoField = new JTextField(10);
-            label.setLabelFor(correoField);
-            panelFields.add(correoField);
+            correo = new JTextField(20);
+            label.setLabelFor(correo);
+            panelFields.add(correo);
 
             label = new JLabel("Genero: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            generoComboBox = new JComboBox<>(new String[]{"Masculino", "Femenino"});
-            label.setLabelFor(generoComboBox);
-            panelFields.add(generoComboBox);
+            genero = new JComboBox<>(new String[]{"MASCULINO", "FEMENINO"});
+            label.setLabelFor(genero);
+            panelFields.add(genero);
 
             label = new JLabel("Fecha de nacimiento: ", JLabel.TRAILING);
             panelFields.add(label);
@@ -137,12 +134,26 @@ public class PanelCliente extends JPanel {
             label = new JLabel("", JLabel.TRAILING);
             panelFields.add(label);
 
-            agregarClienteButton = new JButton(textoBotonAceptar);
-            agregarClienteButton.setActionCommand(comando);
-            label.setLabelFor(agregarClienteButton);
-            panelFields.add(agregarClienteButton);
+            if (tipoPanel.equals("BUSCAR") || tipoPanel.equals("ELIMINAR")) {
+                clave.setEditable(false);
+                nombres.setEditable(false);
+                apellidos.setEditable(false);
+                correo.setEditable(false);
+                genero.setEditable(false);
+                diaNacimientoComboBox.setEditable(false);
+                mesNacimientoComboBox.setEditable(false);
+                anioNacimientoComboBox.setEditable(false);
+            }
 
-            SpringUtilities.makeCompactGrid(panelFields, 8, 2, 0, 0, 5, 5);
+            if (!tipoPanel.equals("BUSCAR")) {
+                aceptar = new JButton(textoBotonAceptar);
+                aceptar.setActionCommand("CLIENTE_" + tipoPanel.toUpperCase() + "_ACEPTAR");
+                label.setLabelFor(aceptar);
+                panelFields.add(aceptar);
+                SpringUtilities.makeCompactGrid(panelFields, 8, 2, 0, 0, 5, 5);
+            } else {
+                SpringUtilities.makeCompactGrid(panelFields, 7, 2, 0, 0, 5, 5);
+            }
 
             add(panelFields);
         } else if (tipoPanel.equals("LISTADO")) {
@@ -155,76 +166,60 @@ public class PanelCliente extends JPanel {
         }
     }
 
-    public JPanel getPanelFields() {
-        return panelFields;
+    public JTextField getUsuario() {
+        return usuario;
     }
 
-    public void setPanelFields(JPanel panelFields) {
-        this.panelFields = panelFields;
+    public void setUsuario(JTextField usuario) {
+        this.usuario = usuario;
     }
 
-    public JPanel getPanelFecha() {
-        return panelFecha;
+    public JComboBox<String> getUsuarioCombo() {
+        return usuarioCombo;
     }
 
-    public void setPanelFecha(JPanel panelFecha) {
-        this.panelFecha = panelFecha;
+    public void setUsuarioCombo(JComboBox<String> usuarioCombo) {
+        this.usuarioCombo = usuarioCombo;
     }
 
-    public JTextField getUsuarioField() {
-        return usuarioField;
+    public JTextField getClave() {
+        return clave;
     }
 
-    public void setUsuarioField(JTextField usuarioField) {
-        this.usuarioField = usuarioField;
+    public void setClave(JPasswordField clave) {
+        this.clave = clave;
     }
 
-    public JComboBox<String> getUsuarioComboBox() {
-        return usuarioComboBox;
+    public JTextField getNombres() {
+        return nombres;
     }
 
-    public void setUsuarioComboBox(JComboBox<String> usuarioComboBox) {
-        this.usuarioComboBox = usuarioComboBox;
+    public void setNombres(JTextField nombres) {
+        this.nombres = nombres;
     }
 
-    public JTextField getClaveField() {
-        return claveField;
+    public JTextField getApellidos() {
+        return apellidos;
     }
 
-    public void setClaveField(JTextField claveField) {
-        this.claveField = claveField;
+    public void setApellidos(JTextField apellidos) {
+        this.apellidos = apellidos;
     }
 
-    public JTextField getNombresField() {
-        return nombresField;
+    public JTextField getCorreo() {
+        return correo;
     }
 
-    public void setNombresField(JTextField nombresField) {
-        this.nombresField = nombresField;
+    public void setCorreo(JTextField correo) {
+        this.correo = correo;
     }
 
-    public JTextField getApellidosField() {
-        return apellidosField;
+    public JComboBox<String> getGenero() {
+        return genero;
     }
 
-    public void setApellidosField(JTextField apellidosField) {
-        this.apellidosField = apellidosField;
-    }
-
-    public JTextField getCorreoField() {
-        return correoField;
-    }
-
-    public void setCorreoField(JTextField correoField) {
-        this.correoField = correoField;
-    }
-
-    public JComboBox<String> getGeneroComboBox() {
-        return generoComboBox;
-    }
-
-    public void setGeneroComboBox(JComboBox<String> generoComboBox) {
-        this.generoComboBox = generoComboBox;
+    public void setGenero(JComboBox<String> genero) {
+        this.genero = genero;
     }
 
     public JComboBox<Integer> getDiaNacimientoComboBox() {
@@ -251,12 +246,12 @@ public class PanelCliente extends JPanel {
         this.anioNacimientoComboBox = anioNacimientoComboBox;
     }
 
-    public JButton getAgregarClienteButton() {
-        return agregarClienteButton;
+    public JButton getAceptar() {
+        return aceptar;
     }
 
-    public void setAgregarClienteButton(JButton agregarClienteButton) {
-        this.agregarClienteButton = agregarClienteButton;
+    public void setAceptar(JButton aceptar) {
+        this.aceptar = aceptar;
     }
 
     public DefaultTableModel getDefaultTableModel() {

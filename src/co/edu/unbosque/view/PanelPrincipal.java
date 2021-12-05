@@ -5,95 +5,200 @@ import java.awt.*;
 
 public class PanelPrincipal extends JPanel {
 
+    private JPanel panelCarrito;
+
+    private JPanel panelSesion;
+
     private JLabel auxLabel;
 
-    private JTextField usuarioField;
+    private JLabel carrito;
 
-    private JTextField claveField;
+    private JTextField usuario;
 
-    private JButton iniciarSesionButton;
+    private JTextField clave;
 
-    private JButton registrarseButton;
+    private JButton iniciarSesion;
 
-    private Font font;
+    private JButton registrarse;
+
+    private JButton pagar;
+
+    private PanelAdminGestion panelAdminGestion;
+
+    private PanelAdminAccion accionesCliente;
+
+    private PanelAdminAccion accionesProducto;
+
+    private PanelAdminAccion accionesTienda;
 
     public PanelPrincipal() {
-        setLayout(null);
-        init();
+        setLayout(new FlowLayout());
+        setBackground(new Color(214, 81, 67));
         setVisible(true);
+        init();
     }
 
     public void init() {
-        font = new Font("Tahoma", Font.BOLD, 14);
+        panelAdminGestion = new PanelAdminGestion();
+        add(panelAdminGestion);
+        add(carritoPanel());
+        add(sesionPanel());
 
-        auxLabel = new JLabel("Usuario:");
-        auxLabel.setFont(font);
-        auxLabel.setBounds(660, 20, 100, 20);
-        add(auxLabel);
-
-        usuarioField = new JTextField();
-        usuarioField.setFont(font);
-        usuarioField.setBounds(780, 20, 180, 20);
-        add(usuarioField);
-
-        auxLabel = new JLabel("Contraseña:");
-        auxLabel.setFont(font);
-        auxLabel.setBounds(660, 45, 100, 20);
-        add(auxLabel);
-
-        claveField = new JTextField();
-        claveField.setFont(font);
-        claveField.setBounds(780, 45, 180, 20);
-        add(claveField);
-
-        registrarseButton = new JButton("Registrarse");
-        registrarseButton.setBounds(660, 70, 110, 20);
-        registrarseButton.setActionCommand("REGISTRARSE");
-        add(registrarseButton);
-
-        iniciarSesionButton = new JButton("Iniciar sesión");
-        iniciarSesionButton.setBounds(780, 70, 180, 20);
-        iniciarSesionButton.setActionCommand("INICIAR_SESION");
-        add(iniciarSesionButton);
+        accionesCliente = new PanelAdminAccion("Cliente");
+        accionesProducto = new PanelAdminAccion("Producto");
+        accionesTienda = new PanelAdminAccion("Tienda");
     }
 
-    public JLabel getAuxLabel() {
-        return auxLabel;
+    public JPanel carritoPanel() {
+        panelCarrito = new JPanel(new GridLayout(2, 1, 2, 2));
+        panelCarrito.setOpaque(false);
+
+        carrito = new JLabel("Tienes 0 productos en el carrito");
+        carrito.setFont(new Font("Arial", Font.BOLD, 14));
+        carrito.setForeground(Color.WHITE);
+        panelCarrito.add(carrito);
+
+        pagar = new JButton("Pagar");
+        pagar.setActionCommand("PRINCIPAL_PAGAR");
+        panelCarrito.add(pagar);
+
+        return panelCarrito;
     }
 
-    public void setAuxLabel(JLabel auxLabel) {
-        this.auxLabel = auxLabel;
+    public JPanel sesionPanel() {
+        panelSesion = new JPanel(new GridLayout(3, 2, 2, 4));
+        panelSesion.setOpaque(false);
+
+        JPanel botones = new JPanel(new GridLayout(1, 2, 2, 0));
+        botones.setOpaque(false);
+
+        registrarse = new JButton("Registrarse");
+        registrarse.setActionCommand("PRINCIPAL_REGISTRARSE");
+        botones.add(registrarse);
+
+        iniciarSesion = new JButton("Iniciar sesión");
+        iniciarSesion.setActionCommand("PRINCIPAL_INICIAR_SESION");
+        botones.add(iniciarSesion);
+
+        auxLabel = new JLabel("Usuario: ", SwingConstants.RIGHT);
+        auxLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        auxLabel.setForeground(Color.WHITE);
+        panelSesion.add(auxLabel);
+
+        usuario = new JTextField(15);
+        usuario.setFont(new Font("Arial", Font.BOLD, 14));
+        panelSesion.add(usuario);
+
+        auxLabel = new JLabel("Clave: ", SwingConstants.RIGHT);
+        auxLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        auxLabel.setForeground(Color.WHITE);
+        panelSesion.add(auxLabel);
+
+        clave = new JPasswordField(15);
+        clave.setFont(new Font("Arial", Font.BOLD, 14));
+        panelSesion.add(clave);
+
+        auxLabel = new JLabel("");
+        panelSesion.add(auxLabel);
+
+        panelSesion.add(botones);
+
+        return panelSesion;
     }
 
-    public JTextField getUsuarioField() {
-        return usuarioField;
+    public JTextField getUsuario() {
+        return usuario;
     }
 
-    public void setUsuarioField(JTextField usuarioField) {
-        this.usuarioField = usuarioField;
+    public void setUsuario(JTextField usuario) {
+        this.usuario = usuario;
     }
 
-    public JTextField getClaveField() {
-        return claveField;
+    public JTextField getClave() {
+        return clave;
     }
 
-    public void setClaveField(JTextField claveField) {
-        this.claveField = claveField;
+    public void setClave(JTextField clave) {
+        this.clave = clave;
     }
 
-    public JButton getIniciarSesionButton() {
-        return iniciarSesionButton;
+    public JButton getIniciarSesion() {
+        return iniciarSesion;
     }
 
-    public void setIniciarSesionButton(JButton iniciarSesionButton) {
-        this.iniciarSesionButton = iniciarSesionButton;
+    public void setIniciarSesion(JButton iniciarSesion) {
+        this.iniciarSesion = iniciarSesion;
     }
 
-    public JButton getRegistrarseButton() {
-        return registrarseButton;
+    public JButton getRegistrarse() {
+        return registrarse;
     }
 
-    public void setRegistrarseButton(JButton registrarseButton) {
-        this.registrarseButton = registrarseButton;
+    public void setRegistrarse(JButton registrarse) {
+        this.registrarse = registrarse;
+    }
+
+    public JButton getPagar() {
+        return pagar;
+    }
+
+    public void setPagar(JButton pagar) {
+        this.pagar = pagar;
+    }
+
+    public JLabel getCarrito() {
+        return carrito;
+    }
+
+    public void setCarrito(JLabel carrito) {
+        this.carrito = carrito;
+    }
+
+    public PanelAdminGestion getPanelAdminGestion() {
+        return panelAdminGestion;
+    }
+
+    public void setPanelAdminGestion(PanelAdminGestion panelAdminGestion) {
+        this.panelAdminGestion = panelAdminGestion;
+    }
+
+    public JPanel getPanelCarrito() {
+        return panelCarrito;
+    }
+
+    public void setPanelCarrito(JPanel panelCarrito) {
+        this.panelCarrito = panelCarrito;
+    }
+
+    public JPanel getPanelSesion() {
+        return panelSesion;
+    }
+
+    public void setPanelSesion(JPanel panelSesion) {
+        this.panelSesion = panelSesion;
+    }
+
+    public PanelAdminAccion getAccionesCliente() {
+        return accionesCliente;
+    }
+
+    public void setAccionesCliente(PanelAdminAccion accionesCliente) {
+        this.accionesCliente = accionesCliente;
+    }
+
+    public PanelAdminAccion getAccionesProducto() {
+        return accionesProducto;
+    }
+
+    public void setAccionesProducto(PanelAdminAccion accionesProducto) {
+        this.accionesProducto = accionesProducto;
+    }
+
+    public PanelAdminAccion getAccionesTienda() {
+        return accionesTienda;
+    }
+
+    public void setAccionesTienda(PanelAdminAccion accionesTienda) {
+        this.accionesTienda = accionesTienda;
     }
 }

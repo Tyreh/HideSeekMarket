@@ -17,7 +17,6 @@ public class DaoProducto {
 
     public boolean agregarProducto(ArrayList<Producto> arrayProductos, File file, int idProducto, String nombreProducto, String loreProducto, long precioProducto, ImageIcon imagenProducto) {
         Producto producto = new Producto(idProducto, nombreProducto, loreProducto, precioProducto, imagenProducto);
-
         if (buscarProducto(arrayProductos, idProducto) == null) {
             arrayProductos.add(producto);
             archivo.escribirArchivoProducto(arrayProductos, file);

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class DialogUsuario extends JDialog {
+public class PanelUsuario extends JDialog {
     private JLabel disenioTarjeta;
 
     private JLabel binTarjeta;
@@ -25,7 +25,7 @@ public class DialogUsuario extends JDialog {
 
     private JLabel fondoLabel;
 
-    public DialogUsuario() {
+    public PanelUsuario() {
         setLayout(null);
         init();
         setVisible(false);

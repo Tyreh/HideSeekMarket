@@ -3,7 +3,7 @@ package co.edu.unbosque.view;
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelAdminOpcionesAvanzadas extends JPanel {
+public class PanelAdminAccion extends JPanel {
 
     private JButton agregarButton;
 
@@ -19,9 +19,10 @@ public class PanelAdminOpcionesAvanzadas extends JPanel {
 
     private final String auxComando;
 
-    public PanelAdminOpcionesAvanzadas(String auxComando) {
+    public PanelAdminAccion(String auxComando) {
         this.auxComando = auxComando;
         setLayout(new FlowLayout());
+        setOpaque(false);
         init();
         setVisible(false);
     }

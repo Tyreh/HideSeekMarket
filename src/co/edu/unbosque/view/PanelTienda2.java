@@ -1,3 +1,4 @@
+/*
 package co.edu.unbosque.view;
 
 import javax.swing.*;
@@ -77,3 +78,4 @@ public class PanelTienda extends JPanel {
         add(panelFields);
     }
 }
+*/

@@ -1,7 +1,5 @@
 package co.edu.unbosque.model.persistence;
 
-import co.edu.unbosque.model.Cliente;
-import co.edu.unbosque.model.Pareja;
 import co.edu.unbosque.model.Tienda;
 
 import java.io.File;
@@ -59,7 +57,7 @@ public class DaoTienda {
         }
     }
 
-    public boolean modificarCliente(ArrayList<Tienda> arrayTiendas, File file, int idTienda, String ciudadTienda, String direccionTienda) {
+    public boolean modificarTienda(ArrayList<Tienda> arrayTiendas, File file, int idTienda, String ciudadTienda, String direccionTienda) {
         try {
             Tienda existente = buscarTienda(arrayTiendas, idTienda);
             if (existente != null) {
