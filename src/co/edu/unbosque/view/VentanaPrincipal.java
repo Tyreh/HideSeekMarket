@@ -14,6 +14,8 @@ public class VentanaPrincipal extends JFrame {
 
     private DialogRegistro dialogRegistro;
 
+    private DialogUsuario dialogUsuario;
+
     private PanelAdmin panelAdmin;
 
     private PanelPrincipal panelPrincipal;
@@ -30,10 +32,11 @@ public class VentanaPrincipal extends JFrame {
 
     private PagarCarrito pagarCarrito;
 
+    private TarjetaCreditoPanel tarjetaCreditoPanel;
 
     public VentanaPrincipal(ArrayList<Producto> productoArrayList) {
         this.productoArrayList = productoArrayList;
-        setTitle("Proyecto");
+        setTitle("Filldest");
         setSize(1200, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -53,9 +56,15 @@ public class VentanaPrincipal extends JFrame {
 
         pagarCarrito = new PagarCarrito(productoArrayList);
         pagarCarrito.setBounds(0, 0, 560, 450);
+
+        tarjetaCreditoPanel = new TarjetaCreditoPanel();
+        tarjetaCreditoPanel.setBounds(0, 0, 800, 390);
         //add(pagarCarrito, BorderLayout.LINE_START);
 
         panelAdminGestion = new PanelAdminGestion();
+
+        dialogUsuario = new DialogUsuario();
+        dialogUsuario.setBounds(0, 0, 800, 390);
 
         panelAdmin = new PanelAdmin();
 
@@ -106,6 +115,12 @@ public class VentanaPrincipal extends JFrame {
         return pagarCarrito;
     }
 
+    public DialogUsuario getDialogUsuario() {
+        return dialogUsuario;
+    }
 
+    public TarjetaCreditoPanel getTarjetaCreditoPanel() {
+        return tarjetaCreditoPanel;
+    }
 }
 

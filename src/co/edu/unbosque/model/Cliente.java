@@ -27,13 +27,9 @@ public class Cliente implements Serializable {
 
     private String binTarjeta;
 
-    private int mesCaducidadTarjeta;
-
-    private int anioCaducidadTarjeta;
-
     private int codigoTarjeta;
 
-    public Cliente(String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, String binTarjeta, int mesCaducidadTarjeta, int anioCaducidadTarjeta, int codigoTarjeta) {
+    public Cliente(String usuario, String clave, String nombres, String apellidos, String correo, String genero, String fechaNacimiento, long saldo, ArrayList<Pareja> parejas, String binTarjeta, int codigoTarjeta) {
         this.usuario = usuario;
         this.clave = clave;
         this.nombres = nombres;
@@ -44,8 +40,6 @@ public class Cliente implements Serializable {
         this.saldo = saldo;
         this.parejas = parejas;
         this.binTarjeta = binTarjeta;
-        this.mesCaducidadTarjeta = mesCaducidadTarjeta;
-        this.anioCaducidadTarjeta = anioCaducidadTarjeta;
         this.codigoTarjeta = codigoTarjeta;
     }
 
@@ -129,21 +123,6 @@ public class Cliente implements Serializable {
         this.binTarjeta = binTarjeta;
     }
 
-    public int getMesCaducidadTarjeta() {
-        return mesCaducidadTarjeta;
-    }
-
-    public void setMesCaducidadTarjeta(int mesCaducidadTarjeta) {
-        this.mesCaducidadTarjeta = mesCaducidadTarjeta;
-    }
-
-    public int getAnioCaducidadTarjeta() {
-        return anioCaducidadTarjeta;
-    }
-
-    public void setAnioCaducidadTarjeta(int anioCaducidadTarjeta) {
-        this.anioCaducidadTarjeta = anioCaducidadTarjeta;
-    }
 
     public int getCodigoTarjeta() {
         return codigoTarjeta;
@@ -166,7 +145,6 @@ public class Cliente implements Serializable {
                 "\n\nDatos de tarjeta:" +
                 "\n\nSaldo: " + saldo +
                 "\nBin: " + binTarjeta +
-                "\nHasta: " + mesCaducidadTarjeta + "/" + anioCaducidadTarjeta +
                 "\nCVV: " + codigoTarjeta;
     }
 }

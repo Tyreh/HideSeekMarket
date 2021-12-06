@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class PanelCliente extends JPanel {
+public class PanelPareja extends JPanel {
 
     private JPanel panelFields;
 
@@ -12,29 +12,27 @@ public class PanelCliente extends JPanel {
 
     private JLabel label;
 
-    private JTextField usuario;
+    private JTextField idPareja;
 
-    private JComboBox<String> usuarioCombo;
-
-    private JPasswordField clave;
+    private JComboBox<String> idParejaCombo;
 
     private JTextField nombres;
 
     private JTextField apellidos;
 
-    private JTextField correo;
+    private JTextField saldo;
 
-    private JComboBox<String> genero;
+    private JTextField generoField;
+
+    private JTextField fechaNacimientoField;
+
+    private JComboBox<String> generoCombo;
 
     private JComboBox<Integer> diaNacimientoComboBox;
 
     private JComboBox<String> mesNacimientoComboBox;
 
     private JComboBox<Integer> anioNacimientoComboBox;
-
-    private JTextField fechaNacimientoField;
-
-    private JTextField generoField;
 
     private JButton aceptar;
 
@@ -46,47 +44,43 @@ public class PanelCliente extends JPanel {
 
     private final String tipoPanel;
 
-    private String textoBotonAceptar;
-
-    public PanelCliente(String tipoPanel, String textoBotonAceptar) {
+/*    public PanelPareja(String tipoPanel, String textoBotonAceptar) {
         this.textoBotonAceptar = textoBotonAceptar;
         this.tipoPanel = tipoPanel;
         setLayout(new FlowLayout());
         init();
         setVisible(false);
-    }
+    }*/
 
-    public PanelCliente(String tipoPanel) {
+    public PanelPareja(String tipoPanel) {
         this.tipoPanel = tipoPanel;
-        setLayout(new GridLayout());
+        if (tipoPanel.equalsIgnoreCase("LISTADO")) {
+            setLayout(new GridLayout());
+        } else {
+            setLayout(new FlowLayout());
+        }
         init();
         setVisible(false);
     }
 
     public void init() {
-        if (tipoPanel.equals("AGREGAR") || tipoPanel.equals("MODIFICAR") || tipoPanel.equals("ELIMINAR") || tipoPanel.equals("BUSCAR")) {
+        if (tipoPanel.equalsIgnoreCase("AGREGAR") || tipoPanel.equalsIgnoreCase("MODIFICAR") || tipoPanel.equalsIgnoreCase("ELIMINAR") || tipoPanel.equalsIgnoreCase("BUSCAR")) {
             panelFields = new JPanel(new SpringLayout());
 
-            label = new JLabel("Usuario: ", JLabel.TRAILING);
+            label = new JLabel("ID: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            if (!tipoPanel.equals("AGREGAR")) {
-                usuarioCombo = new JComboBox<>();
-                usuarioCombo.setActionCommand("CLIENTE_" + tipoPanel.toUpperCase() + "_COMBOBOX");
-                label.setLabelFor(usuarioCombo);
-                panelFields.add(usuarioCombo);
+            if (!tipoPanel.equalsIgnoreCase("AGREGAR")) {
+                idParejaCombo = new JComboBox<>();
+                idParejaCombo.setActionCommand("PAREJA_" + tipoPanel.toUpperCase() + "_COMBOBOX");
+                label.setLabelFor(idParejaCombo);
+                panelFields.add(idParejaCombo);
             } else {
-                usuario = new JTextField(20);
-                label.setLabelFor(usuario);
-                panelFields.add(usuario);
+                idPareja = new JTextField(20);
+                label.setLabelFor(idPareja);
+                panelFields.add(idPareja);
             }
 
-            label = new JLabel("Clave: ", JLabel.TRAILING);
-            panelFields.add(label);
-
-            clave = new JPasswordField(20);
-            label.setLabelFor(clave);
-            panelFields.add(clave);
 
             label = new JLabel("Nombres: ", JLabel.TRAILING);
             panelFields.add(label);
@@ -102,12 +96,13 @@ public class PanelCliente extends JPanel {
             label.setLabelFor(apellidos);
             panelFields.add(apellidos);
 
-            label = new JLabel("Correo: ", JLabel.TRAILING);
+            label = new JLabel("Saldo: ", JLabel.TRAILING);
             panelFields.add(label);
 
-            correo = new JTextField(20);
-            label.setLabelFor(correo);
-            panelFields.add(correo);
+            saldo = new JTextField(20);
+            label.setLabelFor(saldo);
+            panelFields.add(saldo);
+
 
             if (tipoPanel.equalsIgnoreCase("BUSCAR") || tipoPanel.equalsIgnoreCase("ELIMINAR")) {
                 label = new JLabel("Genero: ", JLabel.TRAILING);
@@ -124,26 +119,15 @@ public class PanelCliente extends JPanel {
                 label.setLabelFor(fechaNacimientoField);
                 panelFields.add(fechaNacimientoField);
 
-                clave.setEditable(false);
                 nombres.setEditable(false);
                 apellidos.setEditable(false);
-                correo.setEditable(false);
                 generoField.setEditable(false);
                 fechaNacimientoField.setEditable(false);
+                saldo.setEditable(false);
 
                 label = new JLabel("", JLabel.TRAILING);
                 panelFields.add(label);
             } else {
-                label = new JLabel("Genero: ", JLabel.TRAILING);
-                panelFields.add(label);
-
-                genero = new JComboBox<>(new String[]{"MASCULINO", "FEMENINO"});
-                label.setLabelFor(genero);
-                panelFields.add(genero);
-
-                label = new JLabel("Fecha de nacimiento: ", JLabel.TRAILING);
-                panelFields.add(label);
-
                 panelFecha = new JPanel(new GridLayout(1, 3, 3, 0));
 
                 anioNacimientoComboBox = new JComboBox<>();
@@ -157,6 +141,16 @@ public class PanelCliente extends JPanel {
                 diaNacimientoComboBox = new JComboBox<>();
                 panelFecha.add(diaNacimientoComboBox);
 
+                label = new JLabel("Genero: ", JLabel.TRAILING);
+                panelFields.add(label);
+
+                generoCombo = new JComboBox<>(new String[]{"MASCULINO", "FEMENINO"});
+                label.setLabelFor(generoCombo);
+                panelFields.add(generoCombo);
+
+                label = new JLabel("Fecha de nacimiento: ", JLabel.TRAILING);
+                panelFields.add(label);
+
                 label.setLabelFor(panelFecha);
                 panelFields.add(panelFecha);
 
@@ -164,19 +158,19 @@ public class PanelCliente extends JPanel {
                 panelFields.add(label);
             }
 
-            if (!tipoPanel.equals("BUSCAR")) {
-                aceptar = new JButton(textoBotonAceptar);
-                aceptar.setActionCommand("CLIENTE_" + tipoPanel.toUpperCase() + "_ACEPTAR");
+            if (!tipoPanel.equalsIgnoreCase("BUSCAR")) {
+                aceptar = new JButton(tipoPanel + " pareja");
+                aceptar.setActionCommand("PAREJA_" + tipoPanel.toUpperCase() + "_ACEPTAR");
                 label.setLabelFor(aceptar);
                 panelFields.add(aceptar);
-                SpringUtilities.makeCompactGrid(panelFields, 8, 2, 0, 0, 5, 5);
-            } else {
                 SpringUtilities.makeCompactGrid(panelFields, 7, 2, 0, 0, 5, 5);
+            } else {
+                SpringUtilities.makeCompactGrid(panelFields, 6, 2, 0, 0, 5, 5);
             }
 
             add(panelFields);
-        } else if (tipoPanel.equals("LISTADO")) {
-            defaultTableModel = new DefaultTableModel(new String[]{"USUARIO", "NOMBRES", "APELLIDOS", "CORREO", "GENERO", "FECHA DE NACIMIENTO"}, 0);
+        } else if (tipoPanel.equalsIgnoreCase("LISTADO")) {
+            defaultTableModel = new DefaultTableModel(new String[]{"ID", "NOMBRES", "APELLIDOS", "GENERO", "FECHA DE NACIMIENTO", "SALDO"}, 0);
             table = new JTable(defaultTableModel);
             table.getTableHeader().setReorderingAllowed(false);
             table.setEnabled(false);
@@ -185,28 +179,20 @@ public class PanelCliente extends JPanel {
         }
     }
 
-    public JTextField getUsuario() {
-        return usuario;
+    public JTextField getIdPareja() {
+        return idPareja;
     }
 
-    public void setUsuario(JTextField usuario) {
-        this.usuario = usuario;
+    public void setIdPareja(JTextField idPareja) {
+        this.idPareja = idPareja;
     }
 
-    public JComboBox<String> getUsuarioCombo() {
-        return usuarioCombo;
+    public JComboBox<String> getIdParejaCombo() {
+        return idParejaCombo;
     }
 
-    public void setUsuarioCombo(JComboBox<String> usuarioCombo) {
-        this.usuarioCombo = usuarioCombo;
-    }
-
-    public JTextField getClave() {
-        return clave;
-    }
-
-    public void setClave(JPasswordField clave) {
-        this.clave = clave;
+    public void setIdParejaCombo(JComboBox<String> idParejaCombo) {
+        this.idParejaCombo = idParejaCombo;
     }
 
     public JTextField getNombres() {
@@ -225,20 +211,12 @@ public class PanelCliente extends JPanel {
         this.apellidos = apellidos;
     }
 
-    public JTextField getCorreo() {
-        return correo;
+    public JComboBox<String> getGeneroCombo() {
+        return generoCombo;
     }
 
-    public void setCorreo(JTextField correo) {
-        this.correo = correo;
-    }
-
-    public JComboBox<String> getGenero() {
-        return genero;
-    }
-
-    public void setGenero(JComboBox<String> genero) {
-        this.genero = genero;
+    public void setGeneroCombo(JComboBox<String> generoCombo) {
+        this.generoCombo = generoCombo;
     }
 
     public JComboBox<Integer> getDiaNacimientoComboBox() {
@@ -297,11 +275,19 @@ public class PanelCliente extends JPanel {
         this.scrollPane = scrollPane;
     }
 
-    public JTextField getFechaNacimientoField() {
-        return fechaNacimientoField;
+    public JTextField getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(JTextField saldo) {
+        this.saldo = saldo;
     }
 
     public JTextField getGeneroField() {
         return generoField;
+    }
+
+    public JTextField getFechaNacimientoField() {
+        return fechaNacimientoField;
     }
 }

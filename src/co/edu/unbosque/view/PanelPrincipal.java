@@ -31,6 +31,8 @@ public class PanelPrincipal extends JPanel {
 
     private PanelAdminAccion accionesTienda;
 
+    private PanelAdminAccion accionesUsuario;
+
     public PanelPrincipal() {
         setLayout(new FlowLayout());
         setBackground(new Color(214, 81, 67));
@@ -44,9 +46,10 @@ public class PanelPrincipal extends JPanel {
         add(carritoPanel());
         add(sesionPanel());
 
-        accionesCliente = new PanelAdminAccion("Cliente");
-        accionesProducto = new PanelAdminAccion("Producto");
-        accionesTienda = new PanelAdminAccion("Tienda");
+        accionesCliente = new PanelAdminAccion("Cliente", false);
+        accionesProducto = new PanelAdminAccion("Producto", false);
+        accionesTienda = new PanelAdminAccion("Tienda", false);
+        accionesUsuario = new PanelAdminAccion("Pareja", true);
     }
 
     public JPanel carritoPanel() {
@@ -200,5 +203,9 @@ public class PanelPrincipal extends JPanel {
 
     public void setAccionesTienda(PanelAdminAccion accionesTienda) {
         this.accionesTienda = accionesTienda;
+    }
+
+    public PanelAdminAccion getAccionesUsuario() {
+        return accionesUsuario;
     }
 }

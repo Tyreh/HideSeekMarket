@@ -1,6 +1,7 @@
 package co.edu.unbosque.view;
 
 import co.edu.unbosque.model.Producto;
+import org.jdesktop.swingx.plaf.TipOfTheDayAddon;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -59,8 +60,15 @@ public class PagarCarrito extends JDialog {
         //add(scrollPane, BorderLayout.LINE_END);
         //add(pagoPanel(), BorderLayout.PAGE_END);
 
-        add(header(), BorderLayout.NORTH);
         add(centroPanel(), BorderLayout.SOUTH);
+
+        total = new JLabel("$0", SwingConstants.CENTER);
+        total.setFont(new Font("Arial", Font.BOLD, 30));
+        add(total, BorderLayout.CENTER);
+
+        productosEnCarrito = new JLabel("Tienes 0 productos en el carrito", SwingConstants.CENTER);
+        productosEnCarrito.setFont(new Font("Arial", Font.BOLD, 20));
+        add(productosEnCarrito, BorderLayout.NORTH);
 
 /*        pagar = new JButton();
         pagar.setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/pagar.png/"))).getImage().getScaledInstance(150,50, Image.SCALE_SMOOTH)));
@@ -70,8 +78,7 @@ public class PagarCarrito extends JDialog {
     public JPanel header() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        productosEnCarrito = new JLabel("Tienes 0 productos en el carrito");
-        panel.add(productosEnCarrito, BorderLayout.PAGE_START);
+
 
 /*        defaultTableModel = new DefaultTableModel(new String[]{""}, 0);
         table = new JTable();
@@ -203,5 +210,17 @@ public class PagarCarrito extends JDialog {
         panel.add(botones);
 
         return panel;
+    }
+
+    public JButton getPagar() {
+        return pagar;
+    }
+
+    public JLabel getProductosEnCarrito() {
+        return productosEnCarrito;
+    }
+
+    public JLabel getTotal() {
+        return total;
     }
 }

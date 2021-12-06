@@ -35,6 +35,16 @@ public class PanelAdmin extends JPanel {
 
     private PanelTienda listadoTienda;
 
+    private PanelPareja agregarPareja;
+
+    private PanelPareja buscarPareja;
+
+    private PanelPareja modificarPareja;
+
+    private PanelPareja eliminarPareja;
+
+    private PanelPareja listadoPareja;
+
     public PanelAdmin() {
         setLayout(new BorderLayout());
         init();
@@ -59,6 +69,12 @@ public class PanelAdmin extends JPanel {
         modificarTienda = new PanelTienda("MODIFICAR", "Modificar tienda");
         eliminarTienda = new PanelTienda("ELIMINAR", "Eliminar tienda");
         listadoTienda = new PanelTienda("LISTADO");
+
+        agregarPareja = new PanelPareja("Agregar");
+        buscarPareja = new PanelPareja("Buscar");
+        modificarPareja = new PanelPareja("Modificar");
+        eliminarPareja = new PanelPareja("Eliminar");
+        listadoPareja = new PanelPareja("Listado");
     }
 
     public PanelProducto getAgregarProducto() {
@@ -119,5 +135,25 @@ public class PanelAdmin extends JPanel {
 
     public PanelCliente getEliminarCliente() {
         return eliminarCliente;
+    }
+
+    public PanelPareja getAgregarPareja() {
+        return agregarPareja;
+    }
+
+    public PanelPareja getBuscarPareja() {
+        return buscarPareja;
+    }
+
+    public PanelPareja getModificarPareja() {
+        return modificarPareja;
+    }
+
+    public PanelPareja getEliminarPareja() {
+        return eliminarPareja;
+    }
+
+    public PanelPareja getListadoPareja() {
+        return listadoPareja;
     }
 }

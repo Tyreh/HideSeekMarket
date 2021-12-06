@@ -17,10 +17,15 @@ public class PanelAdminAccion extends JPanel {
 
     private JButton regresarButton;
 
+    private JButton tarjetaButton;
+
     private final String auxComando;
 
-    public PanelAdminAccion(String auxComando) {
+    private final boolean modoUsuario;
+
+    public PanelAdminAccion(String auxComando, boolean modoUsuario) {
         this.auxComando = auxComando;
+        this.modoUsuario = modoUsuario;
         setLayout(new FlowLayout());
         setOpaque(false);
         init();
@@ -47,6 +52,12 @@ public class PanelAdminAccion extends JPanel {
         mostrarTodosButton = new JButton("<html><p style=\"text-align:center;\">Listado de <br>" + auxComando.toLowerCase() + "s</p></html>");
         mostrarTodosButton.setActionCommand("LISTADO_" + auxComando.toUpperCase());
         add(mostrarTodosButton);
+
+        if (modoUsuario) {
+            tarjetaButton = new JButton("<html><p style=\"text-align:center;\">Ver información<br>de Tarjeta</p></html>");
+            tarjetaButton.setActionCommand("TARJETA_" + auxComando.toUpperCase());
+            add(tarjetaButton);
+        }
 
         regresarButton = new JButton("<html><p style=\"text-align:center;\">Regresar</p></html>");
         regresarButton.setBackground(new Color(250, 128, 114));
@@ -101,5 +112,9 @@ public class PanelAdminAccion extends JPanel {
 
     public void setRegresarButton(JButton regresarButton) {
         this.regresarButton = regresarButton;
+    }
+
+    public JButton getTarjetaButton() {
+        return tarjetaButton;
     }
 }

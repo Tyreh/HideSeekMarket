@@ -1,6 +1,10 @@
 package co.edu.unbosque.model;
 
-public class Pareja {
+import java.io.Serializable;
+
+public class Pareja implements Serializable {
+
+    private int id;
 
     private String nombres;
 
@@ -10,11 +14,15 @@ public class Pareja {
 
     private String fechaNacimiento;
 
-    public Pareja(String nombre, String apellidos, String genero, String fechaNacimiento) {
+    private long saldo;
+
+    public Pareja(int id, String nombre, String apellidos, String genero, String fechaNacimiento, long saldo) {
+        this.id = id;
         this.nombres = nombre;
         this.apellidos = apellidos;
         this.genero = genero;
         this.fechaNacimiento = fechaNacimiento;
+        this.saldo = saldo;
     }
 
     public String getNombres() {
@@ -47,5 +55,21 @@ public class Pareja {
 
     public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(long saldo) {
+        this.saldo = saldo;
     }
 }

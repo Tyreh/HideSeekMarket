@@ -1,6 +1,7 @@
 package co.edu.unbosque.controller;
 
 import co.edu.unbosque.model.*;
+import co.edu.unbosque.view.ProductoManager;
 import co.edu.unbosque.view.VentanaPrincipal;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Objects;
@@ -20,7 +22,10 @@ public class Controller implements ActionListener {
 
     private ImageIcon imageAux;
 
-    private ImageIcon iconAux;
+    private String usuarioSesion = "";
+
+
+    int anioActual;
 
     public Controller() {
         dto = new Dto();
@@ -64,6 +69,14 @@ public class Controller implements ActionListener {
         ventana.getPanelPrincipal().getAccionesTienda().getMostrarTodosButton().addActionListener(this);
         ventana.getPanelPrincipal().getAccionesTienda().getRegresarButton().addActionListener(this);
 
+        ventana.getPanelPrincipal().getAccionesUsuario().getAgregarButton().addActionListener(this);
+        ventana.getPanelPrincipal().getAccionesUsuario().getBuscarButton().addActionListener(this);
+        ventana.getPanelPrincipal().getAccionesUsuario().getModificarButton().addActionListener(this);
+        ventana.getPanelPrincipal().getAccionesUsuario().getEliminarButton().addActionListener(this);
+        ventana.getPanelPrincipal().getAccionesUsuario().getMostrarTodosButton().addActionListener(this);
+        ventana.getPanelPrincipal().getAccionesUsuario().getRegresarButton().addActionListener(this);
+        ventana.getPanelPrincipal().getAccionesUsuario().getTarjetaButton().addActionListener(this);
+
         ventana.getPanelAdmin().getAgregarTienda().getAceptar().addActionListener(this);
 
         ventana.getPanelAdmin().getBuscarTienda().getIdComboBox().addActionListener(this);
@@ -74,6 +87,15 @@ public class Controller implements ActionListener {
         ventana.getPanelAdmin().getModificarTienda().getAceptar().addActionListener(this);
         ventana.getPanelAdmin().getModificarTienda().getIdComboBox().addActionListener(this);
 
+        ventana.getPanelAdmin().getAgregarPareja().getAceptar().addActionListener(this);
+
+        ventana.getPanelAdmin().getBuscarPareja().getIdParejaCombo().addActionListener(this);
+        ventana.getPanelAdmin().getEliminarPareja().getIdParejaCombo().addActionListener(this);
+
+        ventana.getPanelAdmin().getEliminarPareja().getAceptar().addActionListener(this);
+
+        ventana.getPanelAdmin().getModificarPareja().getAceptar().addActionListener(this);
+        ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().addActionListener(this);
 
         ventana.getPanelAdmin().getAgregarProducto().getAceptar().addActionListener(this);
         ventana.getPanelAdmin().getAgregarProducto().getAgregarImagen().addActionListener(this);
@@ -94,6 +116,26 @@ public class Controller implements ActionListener {
         ventana.getPanelAdmin().getModificarCliente().getAceptar().addActionListener(this);
         ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox().addActionListener(this);
         ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().addActionListener(this);
+        ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().addActionListener(this);
+
+        ventana.getPanelAdmin().getBuscarCliente().getUsuarioCombo().addActionListener(this);
+        ventana.getPanelAdmin().getEliminarCliente().getUsuarioCombo().addActionListener(this);
+
+        ventana.getPanelAdmin().getEliminarCliente().getAceptar().addActionListener(this);
+
+        ventana.getPanelAdmin().getAgregarPareja().getAnioNacimientoComboBox().addActionListener(this);
+        ventana.getPanelAdmin().getAgregarPareja().getMesNacimientoComboBox().addActionListener(this);
+
+        ventana.getPanelAdmin().getModificarPareja().getAnioNacimientoComboBox().addActionListener(this);
+        ventana.getPanelAdmin().getModificarPareja().getMesNacimientoComboBox().addActionListener(this);
+
+        for (ProductoManager panel : ventana.getListaProductos().getProductoManagers()) {
+            panel.getAgregar().addActionListener(this);
+            panel.getRemover().addActionListener(this);
+        }
+
+        ventana.getPanelPrincipal().getPagar().addActionListener(this);
+        ventana.getPagarCarrito().getPagar().addActionListener(this);
     }
 
     @Override
@@ -103,46 +145,50 @@ public class Controller implements ActionListener {
 
         visibilidadOpcionesAdmin(comando);
 
-        String nombres;
-        String apellidos;
-        String correo;
-        Integer anioNacimiento;
-        String mesNacimiento;
-        Integer diaNacimiento;
-        String genero;
-
-        if (comando.contains("PRINCIPAL")) {
-            String usuario;
+        if (comando.equals("REGRESAR_PANEL_ADMIN") || comando.equals("REGRESAR_PANEL_PAREJA")) {
+            ventana.add(ventana.getScrollProductos(), BorderLayout.CENTER);
+            ventana.getScrollProductos().setVisible(true);
+            ventana.getPanelPrincipal().getAccionesUsuario().setVisible(false);
+            ventana.getPanelPrincipal().getPanelCarrito().setVisible(true);
+            ventana.getPanelPrincipal().getPanelSesion().setVisible(true);
+            ventana.getPanelPrincipal().getPanelAdminGestion().setVisible(false);
+            ventana.getPanelAdmin().setVisible(false);
+            ventana.remove(ventana.getPanelAdmin());
+            ventana.setSize(1200, 800);
+            ventana.setLocationRelativeTo(null);
+        } else if (comando.contains("PRINCIPAL")) {
             String clave;
 
             switch (comando) {
                 case "PRINCIPAL_REGISTRARSE":
                     break;
                 case "PRINCIPAL_INICIAR_SESION":
-                    usuario = ventana.getPanelPrincipal().getUsuario().getText();
+                    usuarioSesion = ventana.getPanelPrincipal().getUsuario().getText();
                     clave = ventana.getPanelPrincipal().getClave().getText();
 
-                    if (usuario.equals("") || clave.equals("")) {
+                    if (usuarioSesion.equals("") || clave.equals("")) {
                         ventana.getMensajes().mostrarError("Debe llenar ambos campos para poder iniciar sesión.");
                     } else {
-                        Cliente cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                        Cliente cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuarioSesion);
 
-                        if (usuario.equalsIgnoreCase("A") && clave.equalsIgnoreCase("A")) {
+                        if (usuarioSesion.equalsIgnoreCase("A") && clave.equalsIgnoreCase("A")) {
                             ventana.remove(ventana.getScrollProductos());
                             ventana.add(ventana.getPanelAdmin(), BorderLayout.CENTER);
                             ventana.getPanelAdmin().setVisible(true);
                             ventana.getPanelPrincipal().getPanelCarrito().setVisible(false);
                             ventana.getPanelPrincipal().getPanelSesion().setVisible(false);
-//                            ventana.getPanelPrincipal().add(ventana.getPanelPrincipal().getPanelAdminGestion());
                             ventana.getPanelPrincipal().getPanelAdminGestion().setVisible(true);
                             ventana.setSize(900, 500);
                             ventana.setLocationRelativeTo(null);
                         } else if (cliente != null) {
                             if (cliente.getClave().equals(clave)) {
-                                ventana.remove(ventana.getPanelPrincipal());
                                 ventana.remove(ventana.getScrollProductos());
-                                ventana.add(ventana.getPanelUsuario(), BorderLayout.CENTER);
-                                ventana.getPanelUsuario().setVisible(true);
+                                ventana.add(ventana.getPanelAdmin(), BorderLayout.CENTER);
+                                ventana.getPanelAdmin().setVisible(true);
+                                ventana.getPanelPrincipal().getPanelCarrito().setVisible(false);
+                                ventana.getPanelPrincipal().getPanelSesion().setVisible(false);
+                                ventana.getPanelPrincipal().add(ventana.getPanelPrincipal().getAccionesUsuario()).setVisible(true);
+                                ventana.setSize(900, 500);
                             } else {
                                 ventana.getMensajes().mostrarError("El usuario o la clave es incorrecta.");
                             }
@@ -152,6 +198,14 @@ public class Controller implements ActionListener {
                     }
                     break;
                 case "PRINCIPAL_PAGAR":
+                    long total = 0;
+                    for (Producto productos : dto.getArrayProductosCarrito()) {
+                        total += productos.getPrecioProducto();
+                    }
+
+                    ventana.getPagarCarrito().getTotal().setText("TOTAL = $ " + total);
+                    ventana.getPagarCarrito().getProductosEnCarrito().setText("Tienes " + dto.getArrayProductosCarrito().size() + " productos en el carrito");
+
                     if (dto.getArrayProductosCarrito().size() > 0) {
 /*                        ventana.remove(ventana.getScrollProductos());
                         ventana.setSize(600,300);
@@ -166,19 +220,11 @@ public class Controller implements ActionListener {
         }
 
         if (comando.equals("FECHA_NACIMIENTO")) {
-            JComboBox<Integer> agregarDiaComboBox = ventana.getPanelAdmin().getAgregarCliente().getDiaNacimientoComboBox();
-            String agregarMesComboBox = (String) ventana.getPanelAdmin().getAgregarCliente().getMesNacimientoComboBox().getSelectedItem();
-            JComboBox<Integer> agregarAnioComboBox = ventana.getPanelAdmin().getAgregarCliente().getAnioNacimientoComboBox();
-
-            JComboBox<Integer> modificarDiaComboBox = ventana.getPanelAdmin().getModificarCliente().getDiaNacimientoComboBox();
-            String modificarMesComboBox = (String) ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().getSelectedItem();
-            JComboBox<Integer> modificarAnioComboBox = ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox();
-
             try {
-                assert agregarMesComboBox != null;
-                assert modificarMesComboBox != null;
-                calcularDias(agregarMesComboBox, agregarDiaComboBox, agregarAnioComboBox);
-                calcularDias(modificarMesComboBox, modificarDiaComboBox, modificarAnioComboBox);
+                calcularDias((String) Objects.requireNonNull(ventana.getPanelAdmin().getAgregarCliente().getMesNacimientoComboBox().getSelectedItem()), ventana.getPanelAdmin().getAgregarCliente().getDiaNacimientoComboBox(), ventana.getPanelAdmin().getAgregarCliente().getAnioNacimientoComboBox());
+                calcularDias((String) Objects.requireNonNull(ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().getSelectedItem()), ventana.getPanelAdmin().getModificarCliente().getDiaNacimientoComboBox(), ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox());
+                calcularDias((String) Objects.requireNonNull(ventana.getPanelAdmin().getAgregarPareja().getMesNacimientoComboBox().getSelectedItem()), ventana.getPanelAdmin().getAgregarPareja().getDiaNacimientoComboBox(), ventana.getPanelAdmin().getAgregarPareja().getAnioNacimientoComboBox());
+                calcularDias((String) Objects.requireNonNull(ventana.getPanelAdmin().getModificarPareja().getMesNacimientoComboBox().getSelectedItem()), ventana.getPanelAdmin().getModificarPareja().getDiaNacimientoComboBox(), ventana.getPanelAdmin().getModificarPareja().getAnioNacimientoComboBox());
             } catch (NullPointerException ex) {
                 ventana.getPanelAdmin().getAgregarCliente().setVisible(false);
                 ventana.getPanelAdmin().getModificarCliente().setVisible(false);
@@ -280,7 +326,211 @@ public class Controller implements ActionListener {
                 }
                 break;
         }*/
-        if (comando.contains("TIENDA")) {
+        if (comando.contains("CLIENTE")) {
+            String usuario;
+            String clave;
+            String nombres;
+            String apellidos;
+            String correo;
+            String genero;
+            String anioNacimiento;
+            String mesNacimiento;
+            String diaNacimiento;
+            String fechaNacimiento;
+            int saldo = 20000000;
+            ArrayList<Pareja> parejas = new ArrayList<>();
+            String binTarjeta;
+            int codigoTarjeta;
+            Cliente cliente;
+
+            switch (comando) {
+                case "LISTADO_CLIENTE":
+                    visibilidadPaneles(ventana.getPanelAdmin().getListadoCliente());
+
+                    ventana.getPanelAdmin().getListadoCliente().getDefaultTableModel().setRowCount(0);
+                    for (Cliente clientes : dto.getArrayClientes()) {
+                        usuario = clientes.getUsuario();
+                        nombres = clientes.getNombres();
+                        apellidos = clientes.getApellidos();
+                        correo = clientes.getCorreo();
+                        genero = clientes.getGenero();
+                        fechaNacimiento = clientes.getFechaNacimiento();
+                        ventana.getPanelAdmin().getListadoCliente().getDefaultTableModel().addRow(new String[]{usuario, nombres, apellidos, correo, genero, fechaNacimiento});
+                    }
+                    break;
+                case "CLIENTE_AGREGAR_ACEPTAR":
+                    usuario = ventana.getPanelAdmin().getAgregarCliente().getUsuario().getText();
+                    clave = ventana.getPanelAdmin().getAgregarCliente().getClave().getText();
+                    nombres = ventana.getPanelAdmin().getAgregarCliente().getNombres().getText();
+                    apellidos = ventana.getPanelAdmin().getAgregarCliente().getApellidos().getText();
+                    correo = ventana.getPanelAdmin().getAgregarCliente().getCorreo().getText();
+                    genero = (String) ventana.getPanelAdmin().getAgregarCliente().getGenero().getSelectedItem();
+                    anioNacimiento = String.valueOf(ventana.getPanelAdmin().getAgregarCliente().getAnioNacimientoComboBox().getSelectedItem());
+                    mesNacimiento = (String) ventana.getPanelAdmin().getAgregarCliente().getMesNacimientoComboBox().getSelectedItem();
+                    diaNacimiento = String.valueOf(ventana.getPanelAdmin().getAgregarCliente().getDiaNacimientoComboBox().getSelectedItem());
+                    fechaNacimiento = diaNacimiento + "/" + mesNacimiento + "/" + anioNacimiento;
+                    binTarjeta = dto.generarBin();
+                    codigoTarjeta = dto.generarCodigo();
+
+                    if (clave.length() > 5) {
+                        if (correo.contains("@")) {
+                            assert anioNacimiento != null;
+                            if (anioActual - Integer.parseInt(anioNacimiento) >= 18) {
+                                if (dto.getDaoCliente().agregarCliente(dto.getArrayClientes(), dto.getFileClientes(), usuario, clave, nombres, apellidos, correo, genero, fechaNacimiento, saldo, parejas, binTarjeta, codigoTarjeta)) {
+                                    ventana.getMensajes().mostrarInfo("¡Su registro ha sido exitoso!\nEn unos minutos recibirá un correo de confirmación.");
+                                } else {
+                                    ventana.getMensajes().mostrarInfo("Ya existe un cliente con este usuario.");
+                                }
+                            } else {
+                                ventana.getMensajes().mostrarError("Debe ser mayor de edad para poder registrarse en el sistema.");
+                            }
+                        } else {
+                            ventana.getMensajes().mostrarError("El correo ingresado no es válido.");
+                        }
+                    } else {
+                        ventana.getMensajes().mostrarError("La clave ingresada es demasiado corta.");
+                    }
+                    break;
+                case "MODIFICAR_CLIENTE":
+                    ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().removeAllItems();
+                    for (Cliente clientes : dto.getArrayClientes()) {
+                        usuario = clientes.getUsuario();
+                        ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().addItem(usuario);
+                    }
+                case "CLIENTE_MODIFICAR_COMBOBOX":
+                    usuario = (String) ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().getSelectedItem();
+
+                    if (usuario != null) {
+                        if (!usuario.equals("")) {
+                            try {
+                                cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                                ventana.getPanelAdmin().getModificarCliente().getClave().setText(cliente.getClave());
+                            } catch (NullPointerException ex) {
+                                ventana.getMensajes().mostrarError("Este cliente ya no existe.");
+                                ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().removeItem(usuario);
+                                usuario = (String) ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().getSelectedItem();
+                            } finally {
+                                cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                                ventana.getPanelAdmin().getModificarCliente().getClave().setText(cliente.getClave());
+                                ventana.getPanelAdmin().getModificarCliente().getNombres().setText(cliente.getNombres());
+                                ventana.getPanelAdmin().getModificarCliente().getApellidos().setText(cliente.getApellidos());
+                                ventana.getPanelAdmin().getModificarCliente().getCorreo().setText(cliente.getCorreo());
+                            }
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getModificarCliente().getClave().setText("");
+                        ventana.getPanelAdmin().getModificarCliente().getNombres().setText("");
+                        ventana.getPanelAdmin().getModificarCliente().getApellidos().setText("");
+                        ventana.getPanelAdmin().getModificarCliente().getCorreo().setText("");
+                    }
+                    break;
+                case "CLIENTE_MODIFICAR_ACEPTAR":
+                    usuario = (String) ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().getSelectedItem();
+                    clave = ventana.getPanelAdmin().getModificarCliente().getClave().getText();
+                    nombres = ventana.getPanelAdmin().getModificarCliente().getNombres().getText();
+                    apellidos = ventana.getPanelAdmin().getModificarCliente().getApellidos().getText();
+                    correo = ventana.getPanelAdmin().getModificarCliente().getCorreo().getText();
+                    genero = (String) ventana.getPanelAdmin().getModificarCliente().getGenero().getSelectedItem();
+                    anioNacimiento = String.valueOf(ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox().getSelectedItem());
+                    mesNacimiento = (String) ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().getSelectedItem();
+                    diaNacimiento = String.valueOf(ventana.getPanelAdmin().getModificarCliente().getDiaNacimientoComboBox().getSelectedItem());
+                    fechaNacimiento = diaNacimiento + "/" + mesNacimiento + "/" + anioNacimiento;
+
+                    cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+
+                    if (clave.length() > 5) {
+                        if (correo.contains("@")) {
+                            assert anioNacimiento != null;
+                            if ((anioActual - Integer.parseInt(anioNacimiento)) >= 18) {
+                                if (dto.getDaoCliente().modificarCliente(dto.getArrayClientes(), dto.getFileClientes(), usuario, clave, nombres, apellidos, correo, genero, fechaNacimiento, cliente.getSaldo(), cliente.getCodigoTarjeta())) {
+                                    ventana.getMensajes().mostrarInfo("El usuario ha sido modificado correctamente.");
+                                } else {
+                                    ventana.getMensajes().mostrarInfo("El usuario especificado no existe.");
+                                }
+                            } else {
+                                ventana.getMensajes().mostrarError("Debe ser mayor de edad para poder registrarse en el sistema.");
+                            }
+                        } else {
+                            ventana.getMensajes().mostrarError("El correo ingresado no es válido.");
+                        }
+                    } else {
+                        ventana.getMensajes().mostrarError("La clave ingresada es demasiado corta.");
+                    }
+                    break;
+                case "ELIMINAR_CLIENTE":
+                    ventana.getPanelAdmin().getEliminarCliente().getUsuarioCombo().removeAllItems();
+                    for (Cliente clientes : dto.getArrayClientes()) {
+                        usuario = clientes.getUsuario();
+                        ventana.getPanelAdmin().getEliminarCliente().getUsuarioCombo().addItem(usuario);
+                    }
+                    break;
+                case "CLIENTE_ELIMINAR_COMBOBOX":
+                    usuario = (String) ventana.getPanelAdmin().getEliminarCliente().getUsuarioCombo().getSelectedItem();
+
+                    if (usuario != null) {
+                        if (!usuario.equals("")) {
+                            cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                            ventana.getPanelAdmin().getEliminarCliente().getClave().setText(cliente.getClave());
+                            ventana.getPanelAdmin().getEliminarCliente().getNombres().setText(cliente.getNombres());
+                            ventana.getPanelAdmin().getEliminarCliente().getApellidos().setText(cliente.getApellidos());
+                            ventana.getPanelAdmin().getEliminarCliente().getCorreo().setText(cliente.getCorreo());
+                            ventana.getPanelAdmin().getEliminarCliente().getGeneroField().setText(cliente.getGenero());
+                            ventana.getPanelAdmin().getEliminarCliente().getFechaNacimientoField().setText(cliente.getFechaNacimiento());
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getEliminarCliente().getClave().setText("");
+                        ventana.getPanelAdmin().getEliminarCliente().getNombres().setText("");
+                        ventana.getPanelAdmin().getEliminarCliente().getApellidos().setText("");
+                        ventana.getPanelAdmin().getEliminarCliente().getCorreo().setText("");
+                        ventana.getPanelAdmin().getEliminarCliente().getGeneroField().setText("");
+                        ventana.getPanelAdmin().getEliminarCliente().getFechaNacimientoField().setText("");
+                    }
+                    break;
+                case "BUSCAR_CLIENTE":
+                    ventana.getPanelAdmin().getBuscarCliente().getUsuarioCombo().removeAllItems();
+                    for (Cliente clientes : dto.getArrayClientes()) {
+                        usuario = clientes.getUsuario();
+                        ventana.getPanelAdmin().getBuscarCliente().getUsuarioCombo().addItem(usuario);
+                    }
+                    break;
+                case "CLIENTE_BUSCAR_COMBOBOX":
+                    usuario = (String) ventana.getPanelAdmin().getBuscarCliente().getUsuarioCombo().getSelectedItem();
+
+                    if (usuario != null) {
+                        if (!usuario.equals("")) {
+                            cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
+                            ventana.getPanelAdmin().getBuscarCliente().getClave().setText(cliente.getClave());
+                            ventana.getPanelAdmin().getBuscarCliente().getNombres().setText(cliente.getNombres());
+                            ventana.getPanelAdmin().getBuscarCliente().getApellidos().setText(cliente.getApellidos());
+                            ventana.getPanelAdmin().getBuscarCliente().getCorreo().setText(cliente.getCorreo());
+                            ventana.getPanelAdmin().getBuscarCliente().getGeneroField().setText(cliente.getGenero());
+                            ventana.getPanelAdmin().getBuscarCliente().getFechaNacimientoField().setText(cliente.getFechaNacimiento());
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getBuscarCliente().getClave().setText("");
+                        ventana.getPanelAdmin().getBuscarCliente().getNombres().setText("");
+                        ventana.getPanelAdmin().getBuscarCliente().getApellidos().setText("");
+                        ventana.getPanelAdmin().getBuscarCliente().getCorreo().setText("");
+                        ventana.getPanelAdmin().getBuscarCliente().getGeneroField().setText("");
+                        ventana.getPanelAdmin().getBuscarCliente().getFechaNacimientoField().setText("");
+                    }
+                    break;
+                case "CLIENTE_ELIMINAR_ACEPTAR":
+                    usuario = (String) ventana.getPanelAdmin().getEliminarCliente().getUsuarioCombo().getSelectedItem();
+
+                    if (usuario != null) {
+                        if (!usuario.equals("")) {
+                            if (dto.getDaoCliente().eliminarCliente(dto.getArrayClientes(), dto.getFileClientes(), usuario)) {
+                                ventana.getMensajes().mostrarInfo("El usuario ha sido eliminado correctamente.");
+                                ventana.getPanelAdmin().getEliminarCliente().getUsuarioCombo().removeItem(usuario);
+                            } else {
+                                ventana.getMensajes().mostrarError("Este usuario ya no existe.");
+                            }
+                        }
+                    }
+                    break;
+            }
+        } else if (comando.contains("TIENDA")) {
             String idTienda;
             String ciudad;
             String direccion;
@@ -304,10 +554,14 @@ public class Controller implements ActionListener {
                         ciudad = ventana.getPanelAdmin().getAgregarTienda().getCiudad().getText();
                         direccion = ventana.getPanelAdmin().getAgregarTienda().getDireccion().getText();
 
-                        if (dto.getDaoTienda().agregarTienda(dto.getArrayTiendas(), dto.getFileTiendas(), Integer.parseInt(idTienda), ciudad, direccion)) {
-                            ventana.getMensajes().mostrarInfo("La tienda ha sido agregada correctamente.");
+                        if (!ciudad.equals("") || !direccion.equals("")) {
+                            if (dto.getDaoTienda().agregarTienda(dto.getArrayTiendas(), dto.getFileTiendas(), Integer.parseInt(idTienda), ciudad, direccion)) {
+                                ventana.getMensajes().mostrarInfo("La tienda ha sido agregada correctamente.");
+                            } else {
+                                ventana.getMensajes().mostrarError("Ya existe una tienda con esta ID.");
+                            }
                         } else {
-                            ventana.getMensajes().mostrarError("Ya existe una tienda con esta ID.");
+                            ventana.getMensajes().mostrarError("Por favor complete todos los campos.");
                         }
                     } catch (NumberFormatException ex) {
                         ventana.getMensajes().mostrarError("Recuerde que el campo de ID debe contener únicamente valores numéricos.");
@@ -337,6 +591,9 @@ public class Controller implements ActionListener {
                                 ventana.getPanelAdmin().getModificarTienda().getDireccion().setText(tienda.getDireccionTienda());
                             }
                         }
+                    } else {
+                        ventana.getPanelAdmin().getModificarTienda().getCiudad().setText("");
+                        ventana.getPanelAdmin().getModificarTienda().getDireccion().setText("");
                     }
                     break;
                 case "TIENDA_MODIFICAR_ACEPTAR":
@@ -344,11 +601,15 @@ public class Controller implements ActionListener {
                     ciudad = ventana.getPanelAdmin().getModificarTienda().getCiudad().getText();
                     direccion = ventana.getPanelAdmin().getModificarTienda().getDireccion().getText();
 
-                    assert idTienda != null;
-                    if (dto.getDaoTienda().modificarTienda(dto.getArrayTiendas(), dto.getFileTiendas(), Integer.parseInt(idTienda), ciudad, direccion)) {
-                        ventana.getMensajes().mostrarInfo("La tienda ha sido modificada correctamente.");
+                    if (!ciudad.equals("") || !direccion.equals("")) {
+                        assert idTienda != null;
+                        if (dto.getDaoTienda().modificarTienda(dto.getArrayTiendas(), dto.getFileTiendas(), Integer.parseInt(idTienda), ciudad, direccion)) {
+                            ventana.getMensajes().mostrarInfo("La tienda ha sido modificada correctamente.");
+                        } else {
+                            ventana.getMensajes().mostrarInfo("La tienda especificada no existe.");
+                        }
                     } else {
-                        ventana.getMensajes().mostrarInfo("La tienda especificada no existe.");
+                        ventana.getMensajes().mostrarError("Por favor complete todos los campos.");
                     }
                     break;
                 case "ELIMINAR_TIENDA":
@@ -365,9 +626,11 @@ public class Controller implements ActionListener {
                         if (!idTienda.equals("")) {
                             tienda = dto.getDaoTienda().buscarTienda(dto.getArrayTiendas(), Integer.parseInt(idTienda));
                             ventana.getPanelAdmin().getEliminarTienda().getCiudad().setText(tienda.getCiudadTienda());
-                            ventana.getPanelAdmin().getEliminarTienda().getCiudad().setText(tienda.getCiudadTienda());
                             ventana.getPanelAdmin().getEliminarTienda().getDireccion().setText(tienda.getDireccionTienda());
                         }
+                    } else {
+                        ventana.getPanelAdmin().getEliminarTienda().getCiudad().setText("");
+                        ventana.getPanelAdmin().getEliminarTienda().getDireccion().setText("");
                     }
                     break;
                 case "BUSCAR_TIENDA":
@@ -384,9 +647,11 @@ public class Controller implements ActionListener {
                         if (!idTienda.equals("")) {
                             tienda = dto.getDaoTienda().buscarTienda(dto.getArrayTiendas(), Integer.parseInt(idTienda));
                             ventana.getPanelAdmin().getBuscarTienda().getCiudad().setText(tienda.getCiudadTienda());
-                            ventana.getPanelAdmin().getBuscarTienda().getCiudad().setText(tienda.getCiudadTienda());
                             ventana.getPanelAdmin().getBuscarTienda().getDireccion().setText(tienda.getDireccionTienda());
                         }
+                    } else {
+                        ventana.getPanelAdmin().getBuscarTienda().getCiudad().setText("");
+                        ventana.getPanelAdmin().getBuscarTienda().getDireccion().setText("");
                     }
                     break;
                 case "TIENDA_ELIMINAR_ACEPTAR":
@@ -404,73 +669,6 @@ public class Controller implements ActionListener {
                     }
                     break;
             }
-
-        } else if (comando.contains("CLIENTE")) {
-            String fechaNacimiento;
-            String usuario;
-            String clave;
-            Cliente cliente;
-
-            switch (comando) {
-                case "LISTADO_CLIENTE":
-                    visibilidadPaneles(ventana.getPanelAdmin().getListadoProducto());
-
-                    ventana.getPanelAdmin().getListadoProducto().getDefaultTableModel().setRowCount(0);
-                    for (Cliente clientes : dto.getArrayClientes()) {
-                        usuario = clientes.getUsuario();
-                        nombres = clientes.getNombres();
-                        apellidos = clientes.getApellidos();
-                        correo = clientes.getCorreo();
-                        genero = clientes.getGenero();
-                        fechaNacimiento = clientes.getFechaNacimiento();
-                        ventana.getPanelAdmin().getListadoCliente().getDefaultTableModel().addRow(new String[]{usuario, nombres, apellidos, correo, genero, fechaNacimiento});
-                    }
-                    break;
-                case "MODIFICAR_CLIENTE":
-                    ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().removeAllItems();
-                    for (Cliente clientes : dto.getArrayClientes()) {
-                        usuario = clientes.getUsuario();
-                        ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().addItem(usuario);
-                    }
-                case "CLIENTE_MODIFICAR_COMBOBOX":
-                    usuario = (String) ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().getSelectedItem();
-
-                    if (usuario != null) {
-                        if (!usuario.equals("")) {
-                            try {
-                                cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
-                                ventana.getPanelAdmin().getModificarCliente().getNombres().setText(cliente.getNombres());
-                            } catch (NullPointerException ex) {
-                                ventana.getMensajes().mostrarError("Este producto ya no existe.");
-                                ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().removeItem(usuario);
-                                usuario = (String) ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().getSelectedItem();
-                            } finally {
-                                cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuario);
-                                ventana.getPanelAdmin().getModificarCliente().getClave().setText(cliente.getClave());
-                                ventana.getPanelAdmin().getModificarCliente().getNombres().setText(cliente.getNombres());
-                                ventana.getPanelAdmin().getModificarCliente().getApellidos().setText(cliente.getApellidos());
-                                ventana.getPanelAdmin().getModificarCliente().getCorreo().setText(cliente.getCorreo());
-                            }
-                        }
-                    }
-                    break;
-                case "INGRESAR_MODIFICACION_CLIENTE":
-                    usuario = (String) ventana.getPanelAdmin().getModificarCliente().getUsuarioCombo().getSelectedItem();
-                    clave = ventana.getPanelAdmin().getModificarCliente().getClave().getText();
-                    nombres = ventana.getPanelAdmin().getModificarCliente().getNombres().getText();
-                    apellidos = ventana.getPanelAdmin().getModificarCliente().getApellidos().getText();
-                    correo = ventana.getPanelAdmin().getModificarCliente().getCorreo().getText();
-                    genero = (String) ventana.getPanelAdmin().getModificarCliente().getGenero().getSelectedItem();
-                    fechaNacimiento = ventana.getPanelAdmin().getModificarCliente().getDiaNacimientoComboBox().getSelectedItem() + "/" + ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().getSelectedItem() + "/" + ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox().getSelectedItem();
-
-                    assert usuario != null;
-                    if (dto.getDaoCliente().modificarCliente(dto.getArrayClientes(), dto.getFileClientes(), usuario, clave, nombres, apellidos, correo, genero, fechaNacimiento)) {
-                        ventana.getMensajes().mostrarInfo("El cliente ha sido modificado correctamente.");
-                    } else {
-                        ventana.getMensajes().mostrarInfo("El cliente especificado no existe.");
-                    }
-                    break;
-            }
         } else if (comando.contains("PRODUCTO")) {
             String idProducto;
             String nombreProducto;
@@ -478,6 +676,21 @@ public class Controller implements ActionListener {
             String precioProducto;
             ImageIcon imagenProducto;
             Producto producto;
+
+            if (comando.contains("AGREGAR") || comando.contains("REMOVER")) {
+                for (Producto productos : dto.getArrayProductos()) {
+                    if (comando.equals("AGREGAR_PRODUCTO_" + productos.getIdProducto())) {
+                        dto.getArrayProductosCarrito().add(productos);
+                        ventana.getPanelPrincipal().getCarrito().setText("Tienes " + dto.getArrayProductosCarrito().size() + " productos en el carrito");
+                        System.out.println(dto.getArrayProductosCarrito());
+                        break;
+                    } else if (comando.equals("REMOVER_PRODUCTO_" + productos.getIdProducto())) {
+                        dto.getArrayProductosCarrito().remove(productos);
+                        ventana.getPanelPrincipal().getCarrito().setText("Tienes " + dto.getArrayProductosCarrito().size() + " productos en el carrito");
+                        break;
+                    }
+                }
+            }
 
             switch (comando) {
                 case "PRODUCTO_IMAGEN_AGREGAR":
@@ -544,6 +757,11 @@ public class Controller implements ActionListener {
                                 ventana.getPanelAdmin().getModificarProducto().getAgregarImagen().setIcon(producto.getImagenProducto());
                             }
                         }
+                    } else {
+                        ventana.getPanelAdmin().getModificarProducto().getNombre().setText("");
+                        ventana.getPanelAdmin().getModificarProducto().getDescripcion().setText("");
+                        ventana.getPanelAdmin().getModificarProducto().getPrecio().setText("");
+                        ventana.getPanelAdmin().getModificarProducto().getImagenLabel().setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/noImage.png/"))).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
                     }
                     break;
                 case "PRODUCTO_MODIFICAR_ACEPTAR":
@@ -577,8 +795,12 @@ public class Controller implements ActionListener {
                             ventana.getPanelAdmin().getEliminarProducto().getDescripcion().setText(producto.getLoreProducto());
                             ventana.getPanelAdmin().getEliminarProducto().getPrecio().setText("$" + producto.getPrecioProducto());
                             ventana.getPanelAdmin().getEliminarProducto().getImagenLabel().setIcon(producto.getImagenProducto());
-
                         }
+                    } else {
+                        ventana.getPanelAdmin().getEliminarProducto().getNombre().setText("");
+                        ventana.getPanelAdmin().getEliminarProducto().getDescripcion().setText("");
+                        ventana.getPanelAdmin().getEliminarProducto().getPrecio().setText("");
+                        ventana.getPanelAdmin().getEliminarProducto().getImagenLabel().setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/noImage.png/"))).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
                     }
                     break;
                 case "BUSCAR_PRODUCTO":
@@ -600,6 +822,11 @@ public class Controller implements ActionListener {
                             ventana.getPanelAdmin().getBuscarProducto().getPrecio().setText("$" + producto.getPrecioProducto());
                             ventana.getPanelAdmin().getBuscarProducto().getImagenLabel().setIcon(producto.getImagenProducto());
                         }
+                    } else {
+                        ventana.getPanelAdmin().getBuscarProducto().getNombre().setText("");
+                        ventana.getPanelAdmin().getBuscarProducto().getDescripcion().setText("");
+                        ventana.getPanelAdmin().getBuscarProducto().getPrecio().setText("");
+                        ventana.getPanelAdmin().getBuscarProducto().getImagenLabel().setIcon(new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/noImage.png/"))).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
                     }
                     break;
                 case "PRODUCTO_ELIMINAR_ACEPTAR":
@@ -616,6 +843,249 @@ public class Controller implements ActionListener {
                         }
                     }
                     break;
+            }
+        } else if (comando.contains("PAREJA")) {
+            String idPareja;
+            String nombres;
+            String apellidos;
+            String genero;
+            String anioNacimiento;
+            String mesNacimiento;
+            String diaNacimiento;
+            String fechaNacimiento;
+            long saldo;
+            Cliente cliente = dto.getDaoCliente().buscarCliente(dto.getArrayClientes(), usuarioSesion);
+            ArrayList<Pareja> parejasArray = cliente.getParejas();
+            Pareja pareja;
+
+            switch (comando) {
+                case "TARJETA_PAREJA":
+                    ventana.getDialogUsuario().setVisible(true);
+                    ventana.getDialogUsuario().setLocationRelativeTo(null);
+
+                    ventana.getDialogUsuario().getTarjetaCreditoPanel().getCvv().setText(String.valueOf(cliente.getCodigoTarjeta()));
+
+                    StringBuilder mensaje = new StringBuilder();
+                    int contador = 0;
+                    for (int i = 0; i < cliente.getBinTarjeta().length(); i++) {
+                        if (contador == 3) {
+                            mensaje.append(cliente.getBinTarjeta().charAt(i)).append(" ");
+                            contador = 0;
+                        } else {
+                            contador++;
+                            mensaje.append(cliente.getBinTarjeta().charAt(i));
+                        }
+                    }
+                    ventana.getDialogUsuario().getTarjetaCreditoPanel().getBin().setText(mensaje.toString());
+
+                    break;
+                case "PAREJA_AGREGAR_ACEPTAR":
+                    try {
+                        idPareja = ventana.getPanelAdmin().getAgregarPareja().getIdPareja().getText();
+                        nombres = ventana.getPanelAdmin().getAgregarPareja().getNombres().getText();
+                        apellidos = ventana.getPanelAdmin().getAgregarPareja().getApellidos().getText();
+                        genero = (String) ventana.getPanelAdmin().getAgregarPareja().getGeneroCombo().getSelectedItem();
+                        anioNacimiento = String.valueOf(ventana.getPanelAdmin().getAgregarPareja().getAnioNacimientoComboBox().getSelectedItem());
+                        mesNacimiento = (String) ventana.getPanelAdmin().getAgregarPareja().getMesNacimientoComboBox().getSelectedItem();
+                        diaNacimiento = String.valueOf(ventana.getPanelAdmin().getAgregarPareja().getDiaNacimientoComboBox().getSelectedItem());
+                        fechaNacimiento = diaNacimiento + "/" + mesNacimiento + "/" + anioNacimiento;
+                        saldo = Long.parseLong(ventana.getPanelAdmin().getAgregarPareja().getSaldo().getText());
+
+                        if (!(saldo > cliente.getSaldo())) {
+                            if (dto.getDaoCliente().agregarPareja(dto.getArrayClientes(), dto.getFileClientes(), parejasArray, cliente.getUsuario(), Integer.parseInt(idPareja), nombres, apellidos, genero, fechaNacimiento, saldo)) {
+                                ventana.getMensajes().mostrarInfo("La pareja ha sido agregada correctamente.");
+                            } else {
+                                ventana.getMensajes().mostrarError("Ya existe una pareja con esta ID.");
+                            }
+                        }
+                    } catch (NumberFormatException ex) {
+                        ventana.getMensajes().mostrarError("Recuerde que los campos de ID y saldo deben contener únicamente valores numéricos.");
+                    }
+                    break;
+                case "LISTADO_PAREJA":
+                    visibilidadPaneles(ventana.getPanelAdmin().getListadoPareja());
+
+                    ventana.getPanelAdmin().getListadoPareja().getDefaultTableModel().setRowCount(0);
+                    for (Pareja parejas : cliente.getParejas()) {
+                        idPareja = String.valueOf(parejas.getId());
+                        nombres = parejas.getNombres();
+                        apellidos = parejas.getApellidos();
+                        genero = parejas.getGenero();
+                        fechaNacimiento = parejas.getFechaNacimiento();
+                        saldo = parejas.getSaldo();
+                        ventana.getPanelAdmin().getListadoPareja().getDefaultTableModel().addRow(new String[]{idPareja, nombres, apellidos, genero, fechaNacimiento, String.valueOf(saldo)});
+                    }
+                    break;
+                case "MODIFICAR_PAREJA":
+                    ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().removeAllItems();
+                    for (Pareja parejas : cliente.getParejas()) {
+                        idPareja = String.valueOf(parejas.getId());
+                        ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().addItem(idPareja);
+                    }
+                    break;
+                case "PAREJA_MODIFICAR_COMBOBOX":
+                    idPareja = (String) ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().getSelectedItem();
+
+                    if (idPareja != null) {
+                        if (!idPareja.equals("")) {
+                            try {
+                                pareja = dto.getDaoCliente().buscarPareja(cliente.getParejas(), Integer.parseInt(idPareja));
+                                ventana.getPanelAdmin().getModificarPareja().getNombres().setText(pareja.getNombres());
+                            } catch (NullPointerException ex) {
+                                ventana.getMensajes().mostrarError("Esta pareja ya no existe.");
+                                ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().removeItem(idPareja);
+                                idPareja = (String) ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().getSelectedItem();
+                            } finally {
+                                pareja = dto.getDaoCliente().buscarPareja(cliente.getParejas(), Integer.parseInt(idPareja));
+                                ventana.getPanelAdmin().getModificarPareja().getNombres().setText(pareja.getNombres());
+                                ventana.getPanelAdmin().getModificarPareja().getApellidos().setText(pareja.getApellidos());
+                                ventana.getPanelAdmin().getModificarPareja().getSaldo().setText(String.valueOf(pareja.getSaldo()));
+                                ventana.getPanelAdmin().getModificarPareja().getGeneroCombo().setSelectedItem(pareja.getGenero());
+                            }
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getModificarPareja().getNombres().setText("");
+                        ventana.getPanelAdmin().getModificarPareja().getApellidos().setText("");
+                        ventana.getPanelAdmin().getModificarPareja().getSaldo().setText("");
+                    }
+                    break;
+/*                case "PAREJA_MODIFICAR_ACEPTAR":
+                    idPareja = (String) ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().getSelectedItem();
+                    nombres = ventana.getPanelAdmin().getModificarPareja().getNombres().getText();
+                    apellidos = ventana.getPanelAdmin().getModificarPareja().getApellidos().getText();
+                    genero = (String) ventana.getPanelAdmin().getModificarPareja().getGeneroCombo().getSelectedItem();
+                    diaNacimiento = String.valueOf(ventana.getPanelAdmin().getModificarPareja().getDiaNacimientoComboBox().getSelectedItem());
+                    mesNacimiento = (String) ventana.getPanelAdmin().getModificarPareja().getMesNacimientoComboBox().getSelectedItem();
+                    anioNacimiento = String.valueOf(ventana.getPanelAdmin().getModificarPareja().getAnioNacimientoComboBox().getSelectedItem());
+                    fechaNacimiento = diaNacimiento + "/" + mesNacimiento + "/" + anioNacimiento;
+                    saldo = Long.parseLong(ventana.getPanelAdmin().getModificarPareja().getSaldo().getText());
+
+                    assert idPareja != null;
+                    if (dto.getDaoCliente().modificarPareja(dto.getArrayClientes(), dto.getFileProductos(), cliente.getParejas(), cliente.getUsuario(), Integer.parseInt(idPareja), nombres, apellidos, genero, fechaNacimiento, saldo)) {
+                        ventana.getMensajes().mostrarInfo("La  pareja ha sido modificada correctamente.");
+                    } else {
+                        ventana.getMensajes().mostrarInfo("La pareja especificada no existe.");
+                    }
+                    break;*/
+                case "ELIMINAR_PAREJA":
+                    ventana.getPanelAdmin().getEliminarPareja().getIdParejaCombo().removeAllItems();
+                    for (Pareja parejas : cliente.getParejas()) {
+                        idPareja = String.valueOf(parejas.getId());
+                        ventana.getPanelAdmin().getEliminarPareja().getIdParejaCombo().addItem(idPareja);
+                    }
+                    break;
+                case "PAREJA_ELIMINAR_COMBOBOX":
+                    idPareja = (String) ventana.getPanelAdmin().getEliminarPareja().getIdParejaCombo().getSelectedItem();
+
+                    if (idPareja != null) {
+                        if (!idPareja.equals("")) {
+                            pareja = dto.getDaoCliente().buscarPareja(cliente.getParejas(), Integer.parseInt(idPareja));
+                            ventana.getPanelAdmin().getEliminarPareja().getNombres().setText(pareja.getNombres());
+                            ventana.getPanelAdmin().getEliminarPareja().getApellidos().setText(pareja.getApellidos());
+                            ventana.getPanelAdmin().getEliminarPareja().getSaldo().setText("$" + pareja.getSaldo());
+                            ventana.getPanelAdmin().getEliminarPareja().getGeneroField().setText(pareja.getGenero());
+                            ventana.getPanelAdmin().getEliminarPareja().getFechaNacimientoField().setText(pareja.getFechaNacimiento());
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getEliminarPareja().getNombres().setText("");
+                        ventana.getPanelAdmin().getEliminarPareja().getApellidos().setText("");
+                        ventana.getPanelAdmin().getEliminarPareja().getSaldo().setText("");
+                        ventana.getPanelAdmin().getEliminarPareja().getGeneroField().setText("");
+                        ventana.getPanelAdmin().getEliminarPareja().getFechaNacimientoField().setText("");
+                    }
+                    break;
+                case "PAREJA_ELIMINAR_ACEPTAR":
+                    idPareja = (String) ventana.getPanelAdmin().getEliminarPareja().getIdParejaCombo().getSelectedItem();
+
+                    if (idPareja != null) {
+                        if (!idPareja.equals("")) {
+                            if (dto.getDaoCliente().eliminarPareja(dto.getArrayClientes(), dto.getFileClientes(), cliente.getParejas(), cliente.getUsuario(), Integer.parseInt(idPareja))) {
+                                ventana.getMensajes().mostrarInfo("La pareja ha sido eliminada correctamente.");
+                                ventana.getPanelAdmin().getEliminarPareja().getIdParejaCombo().removeItem(idPareja);
+                            } else {
+                                ventana.getMensajes().mostrarError("Esta pareja ya no existe.");
+                            }
+                        }
+                    }
+                    break;
+
+
+              /*  case "MODIFICAR_PAREJA":
+                    ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().removeAllItems();
+                    for (Pareja parejas : cliente.getParejas()) {
+                        idPareja = String.valueOf(parejas.getId());
+                        ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().addItem(idPareja);
+                    }
+                case "PAREJA_MODIFICAR_COMBOBOX":
+                    idPareja = (String) ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().getSelectedItem();
+
+                    if (idPareja != null) {
+                        if (!idPareja.equals("")) {
+                            try {
+                                pareja = dto.getDaoCliente().buscarPareja(cliente.getParejas(), Integer.parseInt(idPareja));
+                                ventana.getPanelAdmin().getModificarPareja().getNombres().setText(pareja.getNombres());
+                            } catch (NullPointerException ex) {
+                                ventana.getMensajes().mostrarError("Esta pareja ya no existe.");
+                                ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().removeItem(idPareja);
+                                idPareja = (String) ventana.getPanelAdmin().getModificarPareja().getIdParejaCombo().getSelectedItem();
+                            } finally {
+                                pareja = dto.getDaoCliente().buscarPareja(cliente.getParejas(), Integer.parseInt(idPareja));
+                                ventana.getPanelAdmin().getModificarPareja().getNombres().setText(pareja.getNombres());
+                                ventana.getPanelAdmin().getModificarPareja().getApellidos().setText(pareja.getApellidos());
+                                ventana.getPanelAdmin().getModificarPareja().getSaldo().setText(String.valueOf(pareja.getSaldo()));
+                            }
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getModificarPareja().getNombres().setText("");
+                        ventana.getPanelAdmin().getModificarPareja().getApellidos().setText("");
+                        ventana.getPanelAdmin().getModificarPareja().getSaldo().setText("");
+                    }
+                    break;
+
+
+                case "BUSCAR_PAREJA":
+                    ventana.getPanelAdmin().getBuscarPareja().getIdParejaCombo().removeAllItems();
+                    for (Pareja parejas : cliente.getParejas()) {
+                        idPareja = String.valueOf(parejas.getId());
+                        ventana.getPanelAdmin().getBuscarPareja().getIdParejaCombo().addItem(idPareja);
+                    }
+                    break;
+                case "PAREJA_BUSCAR_COMBOBOX":
+                    idPareja = (String) ventana.getPanelAdmin().getBuscarPareja().getIdParejaCombo().getSelectedItem();
+
+                    if (idPareja != null) {
+                        if (!idPareja.equals("")) {
+                            pareja = dto.getDaoCliente().buscarPareja(cliente.getParejas(), Integer.parseInt(idPareja));
+                            ventana.getPanelAdmin().getBuscarPareja().getNombres().setText(pareja.getNombres());
+                            ventana.getPanelAdmin().getBuscarPareja().getApellidos().setText(pareja.getApellidos());
+                            ventana.getPanelAdmin().getBuscarPareja().getSaldo().setText("$" + pareja.getSaldo());
+                            ventana.getPanelAdmin().getBuscarPareja().getGeneroField().setText(pareja.getGenero());
+                            ventana.getPanelAdmin().getBuscarPareja().getFechaNacimientoField().setText(pareja.getFechaNacimiento());
+                        }
+                    } else {
+                        ventana.getPanelAdmin().getBuscarPareja().getNombres().setText("");
+                        ventana.getPanelAdmin().getBuscarPareja().getApellidos().setText("");
+                        ventana.getPanelAdmin().getBuscarPareja().getSaldo().setText("");
+                        ventana.getPanelAdmin().getBuscarPareja().getGeneroField().setText("");
+                        ventana.getPanelAdmin().getBuscarPareja().getFechaNacimientoField().setText("");
+                    }
+                    break;
+
+                case "LISTADO_PAREJA":
+                    visibilidadPaneles(ventana.getPanelAdmin().getListadoPareja());
+
+                    ventana.getPanelAdmin().getListadoPareja().getDefaultTableModel().setRowCount(0);
+                    for (Pareja parejas : cliente.getParejas()) {
+                        idPareja = String.valueOf(parejas.getId());
+                        nombres = parejas.getNombres();
+                        apellidos = parejas.getApellidos();
+                        genero = parejas.getGenero();
+                        fechaNacimiento = parejas.getFechaNacimiento();
+                        saldo = parejas.getSaldo();
+                        ventana.getPanelAdmin().getListadoPareja().getDefaultTableModel().addRow(new String[]{idPareja, nombres, apellidos, genero, fechaNacimiento, String.valueOf(saldo)});
+                    }
+                    break;
+            }*/
             }
         }
     }
@@ -639,6 +1109,12 @@ public class Controller implements ActionListener {
         ventana.getPanelAdmin().getEliminarCliente().setVisible(false);
         ventana.getPanelAdmin().getListadoCliente().setVisible(false);
 
+        ventana.getPanelAdmin().getAgregarPareja().setVisible(false);
+        ventana.getPanelAdmin().getBuscarPareja().setVisible(false);
+        ventana.getPanelAdmin().getModificarPareja().setVisible(false);
+        ventana.getPanelAdmin().getEliminarPareja().setVisible(false);
+        ventana.getPanelAdmin().getListadoPareja().setVisible(false);
+
         ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getAgregarProducto());
         ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getBuscarProducto());
         ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getModificarProducto());
@@ -657,6 +1133,12 @@ public class Controller implements ActionListener {
         ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getEliminarCliente());
         ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getListadoCliente());
 
+        ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getAgregarPareja());
+        ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getBuscarPareja());
+        ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getModificarPareja());
+        ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getEliminarPareja());
+        ventana.getPanelAdmin().remove(ventana.getPanelAdmin().getListadoPareja());
+
         if (panelVisible != null) {
             ventana.getPanelAdmin().add(panelVisible, BorderLayout.CENTER);
             panelVisible.setVisible(true);
@@ -665,13 +1147,11 @@ public class Controller implements ActionListener {
 
     public ImageIcon cargarImagen() {
         FileDialog fileDialog = new FileDialog(ventana, "Seleccione una imagen", FileDialog.LOAD);
+        fileDialog.setFile("*.jpg;*.jpeg;*.png;*.jfif");
         fileDialog.show();
 
         if (fileDialog.getFile() == null) {
             ventana.getMensajes().mostrarError("No ha seleccionado ninguna imagen.");
-            return new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/noImage.png/"))).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
-        } else if (!fileDialog.getFile().endsWith("png") || !fileDialog.getFile().endsWith("jpg") || !fileDialog.getFile().endsWith("jfif")) {
-            ventana.getMensajes().mostrarError("El archivo seleccionado es inválido. Recuerde utilizar únicamente\nimagenes con formato .png .jpg o .jfif");
             return new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/noImage.png/"))).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         } else {
             String ruta = (fileDialog.getDirectory() + fileDialog.getFile());
@@ -707,6 +1187,11 @@ public class Controller implements ActionListener {
         panelHashMap.put("MODIFICAR_CLIENTE", ventana.getPanelAdmin().getModificarCliente());
         panelHashMap.put("ELIMINAR_CLIENTE", ventana.getPanelAdmin().getEliminarCliente());
 
+        panelHashMap.put("AGREGAR_PAREJA", ventana.getPanelAdmin().getAgregarPareja());
+        panelHashMap.put("BUSCAR_PAREJA", ventana.getPanelAdmin().getBuscarPareja());
+        panelHashMap.put("MODIFICAR_PAREJA", ventana.getPanelAdmin().getModificarPareja());
+        panelHashMap.put("ELIMINAR_PAREJA", ventana.getPanelAdmin().getEliminarPareja());
+
         boolean visibilidadPanelPrincipal = ventana.getPanelPrincipal().getPanelAdminGestion().isVisible();
         JPanel aux = null;
 
@@ -738,7 +1223,13 @@ public class Controller implements ActionListener {
         ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox().removeAllItems();
         ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().removeAllItems();
 
-        int anioActual = Calendar.getInstance().get(Calendar.YEAR);
+        ventana.getPanelAdmin().getAgregarPareja().getAnioNacimientoComboBox().removeAllItems();
+        ventana.getPanelAdmin().getAgregarPareja().getMesNacimientoComboBox().removeAllItems();
+
+        ventana.getPanelAdmin().getModificarPareja().getAnioNacimientoComboBox().removeAllItems();
+        ventana.getPanelAdmin().getModificarPareja().getMesNacimientoComboBox().removeAllItems();
+
+        anioActual = Calendar.getInstance().get(Calendar.YEAR);
         System.out.println("El anio actual es: " + anioActual);
 
         String[] mesesArray = DateFormatSymbols.getInstance().getMonths();
@@ -746,12 +1237,21 @@ public class Controller implements ActionListener {
             if (!mes.equals("")) {
                 ventana.getPanelAdmin().getAgregarCliente().getMesNacimientoComboBox().addItem(mes.toUpperCase());
                 ventana.getPanelAdmin().getModificarCliente().getMesNacimientoComboBox().addItem(mes.toUpperCase());
+
+                ventana.getPanelAdmin().getAgregarPareja().getMesNacimientoComboBox().addItem(mes.toUpperCase());
+                ventana.getPanelAdmin().getAgregarPareja().getMesNacimientoComboBox().addItem(mes.toUpperCase());
+
+                ventana.getPanelAdmin().getModificarPareja().getMesNacimientoComboBox().addItem(mes.toUpperCase());
+                ventana.getPanelAdmin().getModificarPareja().getMesNacimientoComboBox().addItem(mes.toUpperCase());
             }
         }
 
         for (int i = anioActual; i >= (anioActual - 120); i--) {
             ventana.getPanelAdmin().getAgregarCliente().getAnioNacimientoComboBox().addItem(i);
             ventana.getPanelAdmin().getModificarCliente().getAnioNacimientoComboBox().addItem(i);
+
+            ventana.getPanelAdmin().getAgregarPareja().getAnioNacimientoComboBox().addItem(i);
+            ventana.getPanelAdmin().getModificarPareja().getAnioNacimientoComboBox().addItem(i);
         }
         System.out.println("Se agrego un rango desde " + (anioActual - 120) + " hasta " + anioActual + " para los anios.");
     }

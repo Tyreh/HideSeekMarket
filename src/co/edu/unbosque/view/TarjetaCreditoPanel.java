@@ -10,7 +10,12 @@ public class TarjetaCreditoPanel extends JPanel {
 
     private JLabel labelAux;
 
-    private Font font;
+    private JLabel saldo;
+
+    private JLabel bin;
+
+    private JLabel cvv;
+
 
     public TarjetaCreditoPanel() {
         setLayout(null);
@@ -32,7 +37,6 @@ public class TarjetaCreditoPanel extends JPanel {
     }
 
     public void init() {
-        font = new Font("Tahoma", Font.BOLD, 20);
 
         imageAux = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/logo.png/"))).getImage().getScaledInstance(85, 85, Image.SCALE_SMOOTH));
         labelAux = new JLabel();
@@ -41,7 +45,7 @@ public class TarjetaCreditoPanel extends JPanel {
         add(labelAux);
 
         labelAux = new JLabel("<html><p style=\"text-align:right;\">Banco<br>Los Arbolitos</p></html>");
-        labelAux.setFont(font);
+        labelAux.setFont(new Font("Tahoma", Font.BOLD, 20));
         labelAux.setForeground(Color.WHITE);
         labelAux.setBounds(220,30,200,40);
         add(labelAux);
@@ -52,30 +56,38 @@ public class TarjetaCreditoPanel extends JPanel {
         labelAux.setIcon(imageAux);
         add(labelAux);
 
-        font = new Font("Tahoma", Font.BOLD, 12);
+        bin = new JLabel("XXXX XXXX XXXX XXXX");
+        bin.setBounds(30, 170, 300, 20);
+        bin.setFont(new Font("Tahoma", Font.BOLD, 25));
+        bin.setForeground(Color.WHITE);
+        add(bin);
 
-        labelAux = new JLabel("CVV");
-        labelAux.setBounds(30, 170, 100, 20);
-        labelAux.setFont(font);
-        labelAux.setForeground(Color.WHITE);
-        add(labelAux);
-
-        labelAux = new JLabel("MES / AÑO");
-        labelAux.setBounds(210, 150, 100, 20);
-        labelAux.setFont(font);
-        labelAux.setForeground(Color.WHITE);
-        add(labelAux);
-
-        labelAux = new JLabel("<html>HASTA<br>THRU</html>");
-        labelAux.setBounds(130, 180, 100, 30);
-        labelAux.setFont(font);
-        labelAux.setForeground(Color.WHITE);
-        add(labelAux);
+        cvv = new JLabel("CVV");
+        cvv.setBounds(30, 190, 100, 20);
+        cvv.setFont(new Font("Tahoma", Font.BOLD, 12));
+        cvv.setForeground(Color.WHITE);
+        add(cvv);
 
         imageAux = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/images/creditCard/creditCardVISA.png/"))).getImage().getScaledInstance(70,30,Image.SCALE_SMOOTH));
         labelAux = new JLabel();
         labelAux.setBounds(350,190,70,30);
         labelAux.setIcon(imageAux);
         add(labelAux);
+    }
+
+    public JLabel getBin() {
+        return bin;
+    }
+
+    public void setBin(JLabel bin) {
+        this.bin = bin;
+    }
+
+    public JLabel getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(JLabel cvv) {
+        this.cvv = cvv;
     }
 }
